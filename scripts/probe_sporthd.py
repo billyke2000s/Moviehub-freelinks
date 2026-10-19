@@ -54,7 +54,7 @@ def make_diagnostic_fetch(stats):
             obj = json.loads(body)
             if isinstance(obj, dict):
                 # Only known structural key names, never values or raw response.
-                stats["json_shapes"].append({"stage": stage, "keys": sorted(
+                stats["json_shapes"].append({"stage": stage, "src_present": bool(obj.get("src")), "srcBase_present": bool(obj.get("srcBase")), "keys": sorted(
                     k for k in obj if k in ("url", "src", "srcBase", "file", "source",
                                              "error", "message", "status", "data", "iframe"))})
         except ValueError:
