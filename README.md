@@ -79,3 +79,8 @@ These build/probe commands make network requests. Stream availability changes wi
 6. Keep the README, architecture and AI handoff updated when functionality changes.
 
 **Current priority:** obtain and verify a few legitimate, directly playable SportHD links from an actual live event before integrating SportHD into MovieHub. A successful CI run or a populated schedule is not proof of playable video.
+
+
+## Experimental Masqueradarr provider work
+
+The owner requested that the unfinished multi-provider experiments live in **this repository**. See [experiments/masqueradarr](experiments/masqueradarr/README.md) for reconstructed Python clients for Pluto, Samsung TV Plus, Free Live Sports, STIRR and Whale TV+, offline tests and explicit limitations. They are isolated from existing adapters, published outputs and scheduled refreshes. This is experimental source code, not a new enabled MovieHub integration or APK release.

@@ -1,0 +1,21 @@
+name: Test experimental Masqueradarr adapters
+on:
+  push:
+    branches: [experimental/masqueradarr-providers]
+    paths: ['experiments/masqueradarr/**', '.github/workflows/test-masqueradarr-experiments.yml']
+  pull_request:
+    paths: ['experiments/masqueradarr/**', '.github/workflows/test-masqueradarr-experiments.yml']
+permissions:
+  contents: read
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test provider experiments offline
+        run: python -m unittest discover -s experiments/masqueradarr/tests -v
+      - name: Preserve existing converter regressions
+        run: python -m unittest discover -s scripts -p 'test_*.py' -v

@@ -66,3 +66,8 @@ Live outputs are M3U files with `#EXTINF` metadata followed by direct media URLs
 3. Format/schema validation and deduplication pass.
 4. Real media endpoint verified where legally and technically accessible.
 5. Android integration only after separate approval and on-device tests.
+
+
+## Isolated FAST experiments
+
+`experiments/masqueradarr/` contains standard-library Python provider clients with stable metadata identities and in-memory resolve-on-play results. It reconstructs the unfinished Android experiment in the repository chosen by the owner. This is an implemented local library/probe, not an implemented public resolver API. Nothing calls it from existing builders or publishing workflows. Its README documents source dependencies, guide support, tests, prior media evidence and unresolved platforms. A production delivery mechanism is still required before connecting expiring links to MovieHub.
