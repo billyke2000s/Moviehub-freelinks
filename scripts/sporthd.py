@@ -34,7 +34,7 @@ def diagnose(payload, now_ms=None):
                   direct_hls=0, embeds=0, other_links=0,
                   events_with_channels=0, events_without_channels=0,
                   channel_dicts_with_links=0, channel_dicts_without_links=0,
-                  additional_links_events=0, event_keys={},
+                  additional_links_events=0, embed_hosts={}, event_keys={},
                   channel_keys={}, first_start_ms=None, last_start_ms=None)
     for event in matches:
         if not isinstance(event, dict):
@@ -68,6 +68,8 @@ def diagnose(payload, now_ms=None):
                     counts["direct_hls"] += 1
                 elif isinstance(link, str) and urlsplit(link).scheme in ("http", "https"):
                     counts["embeds"] += 1
+                    host = urlsplit(link).hostname or "unknown"
+                    counts["embed_hosts"][host] = counts["embed_hosts"].get(host, 0) + 1
                 else:
                     counts["other_links"] += 1
         try:
