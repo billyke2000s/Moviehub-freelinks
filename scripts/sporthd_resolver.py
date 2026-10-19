@@ -27,14 +27,14 @@ def extract_player_url(body, base_url):
     except (ValueError, AttributeError):
         pass
     patterns = [
-        r'["\\\'](?:src|srcBase|file|source)["\\\']\\s*:\\s*["\\\']([^"\\\']+)["\\\']',
-        r'player\\.setSrc\\(\\s*["\\\']([^"\\\']+)["\\\']',
-        r'<source[^>]+src=["\\\']([^"\\\']+)["\\\']',
-        r'(https?://[^\\s"\\\'<>]+?\\.m3u8(?:\\?[^\\s"\\\'<>]*)?)',
+        r'["\\'](?:src|srcBase|file|source)["\\']\s*:\s*["\\']([^"\\']+)["\\']',
+        r'player\.setSrc\(\s*["\\']([^"\\']+)["\\']',
+        r'<source[^>]+src=["\\']([^"\\']+)["\\']',
+        r'(https?://[^\s"\\'<>]+?\.m3u8(?:\?[^\s"\\'<>]*)?)',
     ]
     for pattern in patterns:
         for match in re.finditer(pattern, body, re.I):
-            candidate = unescape(match.group(1)).replace(r"\\/", "/")
+            candidate = unescape(match.group(1)).replace(r"\/", "/")
             candidate = urljoin(base_url, candidate)
             if direct_hls(candidate):
                 return candidate
@@ -63,7 +63,7 @@ def resolve(url, fetch=None, max_hops=2):
         stream = extract_player_url(page, current)
         if stream:
             return stream
-        match = re.search(r'<iframe[^>]+src=["\\\']([^"\\\']+)["\\\']', page, re.I)
+        match = re.search(r'<iframe[^>]+src=["\\']([^"\\']+)["\\']', page, re.I)
         if not match:
             break
         next_url = urljoin(current, unescape(match.group(1)))
