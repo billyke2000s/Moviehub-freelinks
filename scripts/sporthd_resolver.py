@@ -88,14 +88,14 @@ def resolve_host_api(url, fetch):
             frame = data.get("url")
             if not isinstance(frame, str) or urlsplit(frame).scheme != "https":
                 continue
-            if direct_hls(frame) and verified_hls(frame, origin):
+            if direct_hls(frame):
                 return frame
             # These player hosts expose their normal configuration through ppcfg=1.
             separator = "&" if "?" in frame else "?"
             try:
                 config = fetch(frame + separator + "ppcfg=1", origin)
                 stream = extract_player_url(config, frame)
-                if stream and verified_hls(stream, frame):
+                if stream:
                     return stream
                 # Some hosts serve manifests from PHP endpoints.
                 try:
