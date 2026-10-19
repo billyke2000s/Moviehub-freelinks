@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Probe one representative player per host, without publishing unverified URLs."""
+"""Diagnose a single player from each SportHD host without logging URLs or secrets."""
 import json
-from collections import defaultdict
+from collections import Counter
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 from sporthd import SCHEDULES, MAX_BYTES, is_direct_hls
-from sporthd_resolver import resolve
+from sporthd_resolver import resolve, extract_player_url
 
 HOSTS = ("kora.st", "nexa.st", "vertex.st")
+MAX_PLAYER_BYTES = 1024 * 1024
 
 
 def select_samples(payload):
@@ -29,6 +31,41 @@ def select_samples(payload):
     return found
 
 
+def make_diagnostic_fetch(stats):
+    def fetch(url, referer):
+        path = urlsplit(url).path
+        stage = "player_api" if path.endswith("/api/player.php") else "embed_page"
+        stats["stages"][stage] += 1
+        req = Request(url, headers={"User-Agent": "Mozilla/5.0", "Referer": referer})
+        try:
+            with urlopen(req, timeout=10) as response:
+                raw = response.read(MAX_PLAYER_BYTES + 1)
+                mime = response.headers.get_content_type()
+                stats["responses"].append({"stage": stage, "status": response.status,
+                                           "mime": mime, "bytes": len(raw)})
+        except HTTPError as exc:
+            stats["responses"].append({"stage": stage, "status": exc.code})
+            raise
+        if len(raw) > MAX_PLAYER_BYTES:
+            raise ValueError("Player page exceeds size limit")
+        body = raw.decode("utf-8", errors="replace")
+        try:
+            obj = json.loads(body)
+            if isinstance(obj, dict):
+                # Only known structural key names, never values or raw response.
+                stats["json_shapes"].append({"stage": stage, "keys": sorted(
+                    k for k in obj if k in ("url", "src", "srcBase", "file", "source",
+                                             "error", "message", "status", "data", "iframe"))})
+        except ValueError:
+            stats["html_shapes"].append({"stage": stage,
+                                         "iframe": "<iframe" in body.lower(),
+                                         "hls": bool(extract_player_url(body, url)),
+                                         "clappr": "clappr" in body.lower(),
+                                         "videojs": "videojs" in body.lower()})
+        return body
+    return fetch
+
+
 def main():
     req = Request(SCHEDULES[0], headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
     with urlopen(req, timeout=20) as response:
@@ -42,12 +79,14 @@ def main():
         if not url:
             print(host + ": no sample")
             continue
+        stats = {"stages": Counter(), "responses": [], "json_shapes": [], "html_shapes": []}
         try:
-            stream = resolve(url)
-            print(host + ": " + ("HLS URL extracted (playback unverified)" if is_direct_hls(stream) else "no HLS extracted"))
+            stream = resolve(url, fetch=make_diagnostic_fetch(stats))
+            outcome = "HLS extracted (playback unverified)" if is_direct_hls(stream) else "no HLS extracted"
         except Exception as exc:
-            print(host + ": resolver error " + type(exc).__name__)
-    # No full stream URLs or auth tokens are logged or saved.
+            outcome = "resolver error " + type(exc).__name__
+        print(host + ": " + outcome + " " + json.dumps(stats, default=dict, sort_keys=True))
+    # Never print stream URLs, player HTML, query tokens, or response bodies.
 
 
 if __name__ == "__main__":
