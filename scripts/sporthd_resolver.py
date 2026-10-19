@@ -63,7 +63,7 @@ def resolve(url, fetch=None, max_hops=2):
         stream = extract_player_url(page, current)
         if stream:
             return stream
-        match = re.search(r'<iframe[^>]+src=["\\']([^"\\']+)["\\']', page, re.I)
+        match = re.search(r"""<iframe[^>]+src=["']([^"']+)["']""", page, re.I)
         if not match:
             break
         next_url = urljoin(current, unescape(match.group(1)))
