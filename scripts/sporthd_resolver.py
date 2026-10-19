@@ -55,22 +55,42 @@ def resolve_host_api(url, fetch):
     channel_id = parse_qs(parsed.query).get("id", [None])[0]
     if not channel_id or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", channel_id):
         return None
-    origin = f"https://{host}/"
-    endpoint = urljoin(origin, "api/player.php?" + urlencode({"id": channel_id}))
-    try:
-        data = json.loads(fetch(endpoint, origin))
-        frame = data.get("url")
-        if not isinstance(frame, str) or urlsplit(frame).scheme != "https":
-            return None
-        if direct_hls(frame):
-            return frame
-        # The iframe may expose a normal, directly playable HLS configuration.
-        return resolve(frame, fetch=fetch, max_hops=3)
-    except (ValueError, TypeError, KeyError, OSError):
-        return None
+    mirrors = [host]
+    for prefix in ("", "s2.", "s1.", "s3."):
+        candidate = prefix + base
+        if candidate not in mirrors:
+            mirrors.append(candidate)
+    for mirror in mirrors:
+        origin = f"https://{mirror}/"
+        endpoint = urljoin(origin, "api/player.php?" + urlencode({"id": channel_id}))
+        try:
+            data = json.loads(fetch(endpoint, origin))
+            frame = data.get("url")
+            if not isinstance(frame, str) or urlsplit(frame).scheme != "https":
+                continue
+            if direct_hls(frame):
+                return frame
+            # These player hosts expose their normal configuration through ppcfg=1.
+            separator = "&" if "?" in frame else "?"
+            try:
+                config = fetch(frame + separator + "ppcfg=1", origin)
+                stream = extract_player_url(config, frame)
+                if stream:
+                    return stream
+            except (OSError, ValueError):
+                pass
+            try:
+                stream = resolve(frame, fetch=fetch, max_hops=3, use_api=False)
+                if stream:
+                    return stream
+            except (OSError, ValueError):
+                pass
+        except (OSError, ValueError, TypeError, KeyError):
+            continue
+    return None
 
 
-def resolve(url, fetch=None, max_hops=2):
+def resolve(url, fetch=None, max_hops=2, use_api=True):
     if direct_hls(url):
         return url
     if not urlsplit(url).scheme == "https":
@@ -82,7 +102,7 @@ def resolve(url, fetch=None, max_hops=2):
                 raise ValueError("Player page too large")
             return data.decode("utf-8", errors="replace")
     fetch = fetch or default_fetch
-    api_stream = resolve_host_api(url, fetch)
+    api_stream = resolve_host_api(url, fetch) if use_api else None
     if api_stream:
         return api_stream
     current = url
