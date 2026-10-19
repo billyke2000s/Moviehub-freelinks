@@ -1,0 +1,41 @@
+name: Refresh SportHD live events
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/sporthd.py'
+      - 'scripts/build_sporthd.py'
+      - 'scripts/test_sporthd.py'
+      - '.github/workflows/refresh-sporthd.yml'
+  schedule:
+    - cron: '*/15 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: sporthd-publish
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run offline tests
+        run: python3 -m unittest discover -s scripts -p 'test_sporthd.py' -v
+      - name: Refresh SportHD direct streams
+        run: python3 scripts/build_sporthd.py
+      - name: Publish output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/sporthd.m3u
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: refresh SportHD event playlist"
+            git pull --rebase origin main
+            git push
+          fi
