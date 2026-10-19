@@ -8,7 +8,7 @@ import re
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
-from sporthd_resolver import resolve as resolve_embed
+from sporthd_resolver import resolve as resolve_embed, verified_hls
 
 SCHEDULES = ("https://tvsport.guide/proxy.php?source=index",)
 MAX_BYTES = 8 * 1024 * 1024
@@ -122,8 +122,12 @@ def extract_events(payload, now_ms=None, resolver=None):
                 continue
             label = str(channel.get("name") or "").strip()
             for url in channel.get("links") or []:
-                stream = url if is_direct_hls(url) else resolver(url)
-                if not is_direct_hls(stream) or stream in seen:
+                try:
+                    stream = url if is_direct_hls(url) else resolver(url)
+                    playable = is_direct_hls(stream) or (isinstance(stream, str) and verified_hls(stream))
+                except (OSError, ValueError, TypeError):
+                    continue
+                if not playable or stream in seen:
                     continue
                 seen.add(stream)
                 safe_label = re.sub(r"[\\r\\n\\\"]", " ", label)
