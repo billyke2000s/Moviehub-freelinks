@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 
 SCHEDULES = ("https://tvsport.guide/proxy.php?source=index",)
 MAX_BYTES = 8 * 1024 * 1024
-HLS = re.compile(r"\\.m3u8(?:$|[?#])", re.I)
+HLS = re.compile(r"\.m3u8(?:$|[?#])", re.I)
 
 
 def is_direct_hls(url):
