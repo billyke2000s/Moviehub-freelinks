@@ -50,5 +50,6 @@ jobs:
           git add output/theloop.m3u
           if ! git diff --cached --quiet; then
             git commit -m "chore: refresh hosted live TV playlist"
+            git pull --rebase origin main
             git push
           fi
