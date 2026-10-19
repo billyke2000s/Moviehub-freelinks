@@ -1,0 +1,4 @@
+# Actual The Loop 7.9 compatible source adapters.
+# The Pluto TV module is converted to M3U on GitHub Actions.
+loop:pluto
+# Additional verified The Loop adapters may be added here.
