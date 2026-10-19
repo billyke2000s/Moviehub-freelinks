@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Diagnose a single player from each SportHD host without logging URLs or secrets."""
 import json
+import re
 from collections import Counter
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
@@ -61,7 +62,14 @@ def make_diagnostic_fetch(stats):
                                          "iframe": "<iframe" in body.lower(),
                                          "hls": bool(extract_player_url(body, url)),
                                          "clappr": "clappr" in body.lower(),
-                                         "videojs": "videojs" in body.lower()})
+                                         "videojs": "videojs" in body.lower(),
+                                         "ppcfg": "ppcfg" in body.lower(),
+                                         "source_key": bool(re.search(r"\\bsource\\s*:", body)),
+                                         "src_key": bool(re.search(r"\\bsrc\\s*:", body)),
+                                         "srcbase_key": "srcBase" in body,
+                                         "hls_literal": ".m3u8" in body,
+                                         "script_count": len(re.findall(r"<script\\b", body, re.I)),
+                                         "player_config": "PP_CLAPPR_CONFIG" in body})
         return body
     return fetch
 
