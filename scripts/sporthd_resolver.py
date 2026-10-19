@@ -27,10 +27,10 @@ def extract_player_url(body, base_url):
     except (ValueError, AttributeError):
         pass
     patterns = [
-        r'["\\'](?:src|srcBase|file|source)["\\']\s*:\s*["\\']([^"\\']+)["\\']',
-        r'player\.setSrc\(\s*["\\']([^"\\']+)["\\']',
-        r'<source[^>]+src=["\\']([^"\\']+)["\\']',
-        r'(https?://[^\s"\\'<>]+?\.m3u8(?:\?[^\s"\\'<>]*)?)',
+        r"""["'](?:src|srcBase|file|source)["']\s*:\s*["']([^"']+)["']""",
+        r"""player\.setSrc\(\s*["']([^"']+)["']""",
+        r"""<source[^>]+src=["']([^"']+)["']""",
+        r"""(https?://[^\s"'<>]+?\.m3u8(?:\?[^\s"'<>]*)?)""",
     ]
     for pattern in patterns:
         for match in re.finditer(pattern, body, re.I):
