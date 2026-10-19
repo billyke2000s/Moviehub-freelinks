@@ -12,12 +12,12 @@ class SportHDTests(unittest.TestCase):
         self.assertFalse(is_direct_hls("https://example.com/notm3u8"))
     def test_live_event_filter_and_dedup(self):
         data = {"matches": [
-            {"team1": "A", "team2": "B", "startTimestamp": 1000000, "duration": 90,
+            {"team1": "A", "team2": "B", "startTimestamp": 1700000000000, "duration": 90,
              "channels": [{"name": "Example", "links": ["https://example.com/live.m3u8", "https://example.com/live.m3u8", "https://example.com/embed"]}]},
             {"team1": "Old", "startTimestamp": 1, "duration": 1,
              "channels": [{"name": "Old", "links": ["https://example.com/old.m3u8"]}]}
         ]}
-        items = extract_events(data, now_ms=1100000)
+        items = extract_events(data, now_ms=1700000100000)
         self.assertEqual(len(items), 1)
         self.assertIn("A vs B", items[0][0])
     def test_invalid_payload(self):
