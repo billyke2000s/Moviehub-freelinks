@@ -77,7 +77,7 @@ def resolve_host_api(url, fetch):
                 stream = extract_player_url(config, frame)
                 if stream:
                     return stream
-            except (OSError, ValueError):
+            except (OSError, ValueError, KeyError):
                 pass
             try:
                 stream = resolve(frame, fetch=fetch, max_hops=3, use_api=False)
