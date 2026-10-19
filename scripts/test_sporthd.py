@@ -2,7 +2,7 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from sporthd import extract_events, is_direct_hls
+from sporthd import extract_events, is_direct_hls, diagnose
 
 class SportHDTests(unittest.TestCase):
     def test_only_direct_hls(self):
@@ -20,6 +20,25 @@ class SportHDTests(unittest.TestCase):
         items = extract_events(data, now_ms=1700000100000)
         self.assertEqual(len(items), 1)
         self.assertIn("A vs B", items[0][0])
+    def test_diagnostics(self):
+        data = {"matches": [
+            {"startTimestamp": 1700000000000, "duration": 90,
+             "channels": ["Named Channel", {"name": "Embedded", "links": [
+                 "https://example.com/embed", "https://example.com/live.m3u8"]}]},
+            {"startTimestamp": 1700001000000, "channels": []},
+            {"startTimestamp": 1690000000000, "channels": []},
+            {"channels": []}
+        ]}
+        counts = diagnose(data, now_ms=1700000100000)
+        self.assertEqual(counts["events"], 4)
+        self.assertEqual(counts["live"], 1)
+        self.assertEqual(counts["channel_names"], 1)
+        self.assertEqual(counts["embeds"], 1)
+        self.assertEqual(counts["direct_hls"], 1)
+        self.assertEqual(counts["upcoming"], 1)
+        self.assertEqual(counts["expired"], 1)
+        self.assertEqual(counts["missing_time"], 1)
+
     def test_invalid_payload(self):
         with self.assertRaises(ValueError):
             extract_events({"matches": "invalid"})
