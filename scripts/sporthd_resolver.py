@@ -7,6 +7,7 @@ import re
 from html import unescape
 from urllib.parse import urljoin, urlsplit, parse_qs, urlencode
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 USER_AGENT = "Mozilla/5.0 (compatible; MovieHub-FreeLinks/1.0)"
 MAX_BYTES = 1024 * 1024
@@ -15,6 +16,25 @@ MAX_BYTES = 1024 * 1024
 def direct_hls(url):
     p = urlsplit(url) if isinstance(url, str) else urlsplit("")
     return p.scheme in ("https", "http") and bool(p.hostname) and p.path.lower().endswith(".m3u8")
+
+
+def verified_hls(url, referer=None):
+    """Accept .php or .m3u8 endpoints only if their response is an HLS manifest."""
+    if not isinstance(url, str):
+        return False
+    parsed = urlsplit(url)
+    if parsed.scheme != "https" or not parsed.hostname:
+        return False
+    headers = {"User-Agent": USER_AGENT, "Range": "bytes=0-2047"}
+    if referer:
+        headers["Referer"] = referer
+        origin = urlsplit(referer)
+        headers["Origin"] = f"{origin.scheme}://{origin.netloc}"
+    try:
+        with urlopen(Request(url, headers=headers), timeout=8) as response:
+            return response.read(2048).lstrip().startswith(b"#EXTM3U")
+    except (OSError, ValueError):
+        return False
 
 
 def extract_player_url(body, base_url):
@@ -68,15 +88,24 @@ def resolve_host_api(url, fetch):
             frame = data.get("url")
             if not isinstance(frame, str) or urlsplit(frame).scheme != "https":
                 continue
-            if direct_hls(frame):
+            if direct_hls(frame) and verified_hls(frame, origin):
                 return frame
             # These player hosts expose their normal configuration through ppcfg=1.
             separator = "&" if "?" in frame else "?"
             try:
                 config = fetch(frame + separator + "ppcfg=1", origin)
                 stream = extract_player_url(config, frame)
-                if stream:
+                if stream and verified_hls(stream, frame):
                     return stream
+                # Some hosts serve manifests from PHP endpoints.
+                try:
+                    payload = json.loads(config)
+                    for field in ("src", "srcBase"):
+                        candidate = payload.get(field)
+                        if isinstance(candidate, str) and verified_hls(candidate, frame):
+                            return candidate
+                except (ValueError, AttributeError):
+                    pass
             except (OSError, ValueError, KeyError):
                 pass
             try:
