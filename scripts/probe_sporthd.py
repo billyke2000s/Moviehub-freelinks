@@ -63,6 +63,23 @@ def make_diagnostic_fetch(stats):
                                                "path_hls": parsed.path.lower().endswith(".m3u8"),
                                                "path_extension": parsed.path.rsplit(".", 1)[-1].lower()[:8] if "." in parsed.path else "none",
                                                "length": len(value)}
+                for field in ("src", "srcBase"):
+                    value = obj.get(field)
+                    if isinstance(value, str) and value.startswith("https://"):
+                        try:
+                            stream_req = Request(value, headers={"User-Agent": "Mozilla/5.0",
+                                                                 "Referer": referer,
+                                                                 "Range": "bytes=0-1023"})
+                            with urlopen(stream_req, timeout=8) as stream_response:
+                                head = stream_response.read(1024)
+                                stats["stream_checks"].append({"field": field,
+                                    "status": stream_response.status,
+                                    "mime": stream_response.headers.get_content_type(),
+                                    "hls_header": head.startswith(b"#EXTM3U")})
+                        except HTTPError as exc:
+                            stats["stream_checks"].append({"field": field, "status": exc.code})
+                        except (URLError, TimeoutError, ValueError):
+                            stats["stream_checks"].append({"field": field, "status": "unreachable"})
                 stats["json_shapes"].append({"stage": stage, "source_types": source_types, "src_present": bool(obj.get("src")), "srcBase_present": bool(obj.get("srcBase")), "keys": sorted(
                     k for k in obj if k in ("url", "src", "srcBase", "file", "source",
                                              "error", "message", "status", "data", "iframe"))})
@@ -96,7 +113,7 @@ def main():
         if not url:
             print(host + ": no sample")
             continue
-        stats = {"stages": Counter(), "responses": [], "json_shapes": [], "html_shapes": []}
+        stats = {"stages": Counter(), "responses": [], "json_shapes": [], "html_shapes": [], "stream_checks": []}
         try:
             stream = resolve(url, fetch=make_diagnostic_fetch(stats))
             outcome = "HLS extracted (playback unverified)" if is_direct_hls(stream) else "no HLS extracted"
