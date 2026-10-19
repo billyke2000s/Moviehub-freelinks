@@ -5,7 +5,7 @@ Does not circumvent DRM, authentication, CAPTCHA, or access restrictions.
 import json
 import re
 from html import unescape
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urljoin, urlsplit, parse_qs, urlencode
 from urllib.request import Request, urlopen
 
 USER_AGENT = "Mozilla/5.0 (compatible; MovieHub-FreeLinks/1.0)"
@@ -41,6 +41,34 @@ def extract_player_url(body, base_url):
     return None
 
 
+
+SUPPORTED_HOSTS = {"kora.st", "nexa.st", "vertex.st"}
+
+def resolve_host_api(url, fetch):
+    """Follow the public SportHD player API; no credentials or protection bypass."""
+    parsed = urlsplit(url)
+    host = (parsed.hostname or "").lower()
+    base = host.removeprefix("s1.").removeprefix("s2.").removeprefix("s3.")
+    if base not in SUPPORTED_HOSTS or parsed.scheme != "https":
+        return None
+    channel_id = parse_qs(parsed.query).get("id", [None])[0]
+    if not channel_id or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", channel_id):
+        return None
+    origin = f"https://{host}/"
+    endpoint = urljoin(origin, "api/player.php?" + urlencode({"id": channel_id}))
+    try:
+        data = json.loads(fetch(endpoint, origin))
+        frame = data.get("url")
+        if not isinstance(frame, str) or urlsplit(frame).scheme != "https":
+            return None
+        if direct_hls(frame):
+            return frame
+        # The iframe may expose a normal, directly playable HLS configuration.
+        return resolve(frame, fetch=fetch, max_hops=3)
+    except (ValueError, TypeError, KeyError, OSError):
+        return None
+
+
 def resolve(url, fetch=None, max_hops=2):
     if direct_hls(url):
         return url
@@ -53,6 +81,9 @@ def resolve(url, fetch=None, max_hops=2):
                 raise ValueError("Player page too large")
             return data.decode("utf-8", errors="replace")
     fetch = fetch or default_fetch
+    api_stream = resolve_host_api(url, fetch)
+    if api_stream:
+        return api_stream
     current = url
     visited = set()
     for _ in range(max_hops):
