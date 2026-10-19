@@ -50,3 +50,8 @@ python3 scripts/build_loop_playlist.py
 - A provider is only called 'working' after actual stream/manifest testing; Android playback needs its own later device test.
 
 When handing off again, update this document with verified current state, known bugs, test results and next steps.
+
+
+## Experimental Masqueradarr work moved here (19 October 2026)
+
+The owner explicitly corrected the repository destination: provider discovery/resolution belongs in FreeLinks. New work is on `experimental/masqueradarr-providers`, under `experiments/masqueradarr/`, separate from the existing converters and outputs. A pruned, uncommitted Android working copy was reconstructed as Python clients rather than presented as an exact recovery. Read the experiment README for the five clients, prior evidence, unsupported platforms and delivery decisions. Run its 18 offline tests and the existing 15 tests. The new workflow only runs fixtures; it publishes nothing. Do not enable in the Android app, merge or publish these experiments based solely on fixture success. MovieHub main and existing release assets were not modified by this move.
