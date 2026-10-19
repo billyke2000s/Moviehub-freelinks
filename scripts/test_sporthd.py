@@ -39,6 +39,15 @@ class SportHDTests(unittest.TestCase):
         self.assertEqual(counts["expired"], 1)
         self.assertEqual(counts["missing_time"], 1)
 
+    def test_broken_embed_does_not_abort_other_channels(self):
+        data = {"matches": [{"team1": "A", "startTimestamp": 1700000000000,
+            "duration": 90, "channels": [{"name": "Sources",
+            "links": ["https://example.com/broken", "https://example.com/live.m3u8"]}]}]}
+        def resolver(url):
+            raise OSError("player offline")
+        items = extract_events(data, now_ms=1700000100000, resolver=resolver)
+        self.assertEqual(len(items), 1)
+
     def test_invalid_payload(self):
         with self.assertRaises(ValueError):
             extract_events({"matches": "invalid"})
