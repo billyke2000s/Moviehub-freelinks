@@ -13,6 +13,19 @@ class ResolverTests(unittest.TestCase):
         pages = {"https://site.example/event": '<iframe src="https://site.example/player"></iframe>',
                  "https://site.example/player": '<source src="https://cdn.example/live.m3u8">'}
         self.assertEqual(resolve("https://site.example/event", fetch=lambda u, r: pages[u]), "https://cdn.example/live.m3u8")
+    def test_host_player_api(self):
+        pages = {
+            "https://nexa.st/api/player.php?id=42": '{"url":"https://player.example/embed"}',
+            "https://player.example/embed": 'window.PP_CLAPPR_CONFIG = {"src":"https://cdn.example/live.m3u8"};'
+        }
+        calls = []
+        def fetch(url, referer):
+            calls.append(url)
+            return pages[url]
+        self.assertEqual(resolve("https://nexa.st/play?id=42", fetch=fetch),
+                         "https://cdn.example/live.m3u8")
+        self.assertEqual(calls[0], "https://nexa.st/api/player.php?id=42")
+
     def test_unsupported(self):
         self.assertIsNone(resolve("plugin://kodi/foo"))
         self.assertFalse(direct_hls("https://site.example/embed.php"))
