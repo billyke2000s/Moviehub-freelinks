@@ -8,6 +8,7 @@ on:
       - 'scripts/sporthd_resolver.py'
       - 'scripts/test_sporthd_resolver.py'
       - 'scripts/build_sporthd.py'
+      - 'scripts/probe_sporthd.py'
       - 'scripts/test_sporthd.py'
       - '.github/workflows/refresh-sporthd.yml'
   schedule:
@@ -29,6 +30,8 @@ jobs:
           python-version: '3.12'
       - name: Run offline tests
         run: python3 -m unittest discover -s scripts -p 'test_sporthd*.py' -v
+      - name: Probe one embedded player per host
+        run: python3 scripts/probe_sporthd.py
       - name: Refresh SportHD direct streams
         run: python3 scripts/build_sporthd.py
       - name: Publish output
