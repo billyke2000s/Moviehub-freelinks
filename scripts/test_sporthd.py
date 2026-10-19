@@ -1,0 +1,27 @@
+import sys
+import unittest
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sporthd import extract_events, is_direct_hls
+
+class SportHDTests(unittest.TestCase):
+    def test_only_direct_hls(self):
+        self.assertTrue(is_direct_hls("https://example.com/live.m3u8?token=abc"))
+        self.assertFalse(is_direct_hls("https://example.com/embed.php?id=1"))
+        self.assertFalse(is_direct_hls("plugin://sporthd/play"))
+        self.assertFalse(is_direct_hls("https://example.com/notm3u8"))
+    def test_live_event_filter_and_dedup(self):
+        data = {"matches": [
+            {"team1": "A", "team2": "B", "startTimestamp": 1000000, "duration": 90,
+             "channels": [{"name": "Example", "links": ["https://example.com/live.m3u8", "https://example.com/live.m3u8", "https://example.com/embed"]}]},
+            {"team1": "Old", "startTimestamp": 1, "duration": 1,
+             "channels": [{"name": "Old", "links": ["https://example.com/old.m3u8"]}]}
+        ]}
+        items = extract_events(data, now_ms=1100000)
+        self.assertEqual(len(items), 1)
+        self.assertIn("A vs B", items[0][0])
+    def test_invalid_payload(self):
+        with self.assertRaises(ValueError):
+            extract_events({"matches": "invalid"})
+if __name__ == "__main__":
+    unittest.main()
