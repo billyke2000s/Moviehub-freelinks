@@ -23,7 +23,7 @@ def is_direct_hls(url):
 
 
 def diagnose(payload, now_ms=None):
-    """Count event/channel/link shapes without exposing URLs or tokens in logs."""
+    """Inspect all event shapes without logging sensitive URLs or tokens."""
     data = json.loads(payload) if isinstance(payload, (str, bytes)) else payload
     matches = data.get("matches", []) if isinstance(data, dict) else data
     if not isinstance(matches, list):
@@ -31,10 +31,45 @@ def diagnose(payload, now_ms=None):
     now_ms = now_ms if now_ms is not None else int(datetime.now(timezone.utc).timestamp() * 1000)
     counts = dict(events=len(matches), live=0, upcoming=0, expired=0,
                   missing_time=0, channel_dicts=0, channel_names=0,
-                  direct_hls=0, embeds=0, other_links=0)
+                  direct_hls=0, embeds=0, other_links=0,
+                  events_with_channels=0, events_without_channels=0,
+                  channel_dicts_with_links=0, channel_dicts_without_links=0,
+                  additional_links_events=0, event_keys={},
+                  channel_keys={}, first_start_ms=None, last_start_ms=None)
     for event in matches:
         if not isinstance(event, dict):
             continue
+        for key in event:
+            counts["event_keys"][key] = counts["event_keys"].get(key, 0) + 1
+        channels = event.get("channels") or []
+        if isinstance(channels, list) and channels:
+            counts["events_with_channels"] += 1
+        else:
+            counts["events_without_channels"] += 1
+        if event.get("additionalLinks"):
+            counts["additional_links_events"] += 1
+        for channel in channels if isinstance(channels, list) else []:
+            if isinstance(channel, str):
+                counts["channel_names"] += 1
+                continue
+            if not isinstance(channel, dict):
+                counts["other_links"] += 1
+                continue
+            counts["channel_dicts"] += 1
+            for key in channel:
+                counts["channel_keys"][key] = counts["channel_keys"].get(key, 0) + 1
+            links = channel.get("links") or []
+            if links:
+                counts["channel_dicts_with_links"] += 1
+            else:
+                counts["channel_dicts_without_links"] += 1
+            for link in links if isinstance(links, list) else []:
+                if is_direct_hls(link):
+                    counts["direct_hls"] += 1
+                elif isinstance(link, str) and urlsplit(link).scheme in ("http", "https"):
+                    counts["embeds"] += 1
+                else:
+                    counts["other_links"] += 1
         try:
             start = int(event["startTimestamp"])
             if start < 10**11:
@@ -43,27 +78,14 @@ def diagnose(payload, now_ms=None):
         except (KeyError, ValueError, TypeError):
             counts["missing_time"] += 1
             continue
+        counts["first_start_ms"] = start if counts["first_start_ms"] is None else min(start, counts["first_start_ms"])
+        counts["last_start_ms"] = start if counts["last_start_ms"] is None else max(start, counts["last_start_ms"])
         if now_ms < start:
             counts["upcoming"] += 1
-            continue
-        if now_ms > start + duration * 60000:
+        elif now_ms > start + duration * 60000:
             counts["expired"] += 1
-            continue
-        counts["live"] += 1
-        for channel in event.get("channels") or []:
-            if isinstance(channel, str):
-                counts["channel_names"] += 1
-                continue
-            if not isinstance(channel, dict):
-                continue
-            counts["channel_dicts"] += 1
-            for link in channel.get("links") or []:
-                if is_direct_hls(link):
-                    counts["direct_hls"] += 1
-                elif isinstance(link, str) and urlsplit(link).scheme in ("http", "https"):
-                    counts["embeds"] += 1
-                else:
-                    counts["other_links"] += 1
+        else:
+            counts["live"] += 1
     return counts
 
 
