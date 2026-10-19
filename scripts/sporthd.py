@@ -8,6 +8,7 @@ import re
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
+from sporthd_resolver import resolve as resolve_embed
 
 SCHEDULES = ("https://tvsport.guide/proxy.php?source=index",)
 MAX_BYTES = 8 * 1024 * 1024
@@ -21,12 +22,13 @@ def is_direct_hls(url):
     return parts.scheme in ("https", "http") and bool(parts.hostname) and bool(HLS.search(parts.path))
 
 
-def extract_events(payload, now_ms=None):
+def extract_events(payload, now_ms=None, resolver=None):
     data = json.loads(payload) if isinstance(payload, (str, bytes)) else payload
     matches = data.get("matches", []) if isinstance(data, dict) else data
     if not isinstance(matches, list):
         raise ValueError("Invalid matches data")
     now_ms = now_ms if now_ms is not None else int(datetime.now(timezone.utc).timestamp() * 1000)
+    resolver = resolver or (lambda url: None)
     result = []
     seen = set()
     for event in matches:
@@ -51,11 +53,12 @@ def extract_events(payload, now_ms=None):
                 continue
             label = str(channel.get("name") or "").strip()
             for url in channel.get("links") or []:
-                if not is_direct_hls(url) or url in seen:
+                stream = url if is_direct_hls(url) else resolver(url)
+                if not is_direct_hls(stream) or stream in seen:
                     continue
-                seen.add(url)
+                seen.add(stream)
                 safe_label = re.sub(r"[\\r\\n\\\"]", " ", label)
-                result.append((f'#EXTINF:-1 group-title="SportHD" tvg-name="{title}",{title} - {safe_label}', url))
+                result.append((f'#EXTINF:-1 group-title="SportHD" tvg-name="{title}",{title} - {safe_label}', stream))
     return result
 
 
@@ -68,7 +71,7 @@ def fetch_channels():
                 raw = response.read(MAX_BYTES + 1)
             if len(raw) > MAX_BYTES:
                 raise ValueError("Schedule exceeds size limit")
-            return extract_events(raw)
+            return extract_events(raw, resolver=resolve_embed)
         except Exception as exc:
             errors.append(f"{endpoint}: {exc}")
     raise RuntimeError("; ".join(errors))
