@@ -127,6 +127,8 @@ def extract_events(payload, now_ms=None, resolver=None):
                     playable = is_direct_hls(stream) or (isinstance(stream, str) and verified_hls(stream))
                 except (OSError, ValueError, TypeError):
                     continue
+                if playable and resolver is resolve_embed:
+                    playable = verified_hls(stream)
                 if not playable or stream in seen:
                     continue
                 seen.add(stream)
