@@ -1,5 +1,15 @@
 # Security
 
+## FreeLinks optimization boundary
+
+Catalogue response reuse is memory-only, per repository instance, keyed by the complete TMDB
+request, bounded to 64 responses/2 MiB payload weight and 60 seconds. Keys and bodies are not
+logged or persisted. Failed responses and invalid JSON are not retained. Mutable JSON objects
+are never shared. Memory trimming prevents older in-flight requests refilling the cleared cache.
+Account, IPTV, provider, signed-link and player requests bypass this cache. Existing transport
+validation and secrets storage remain unchanged. Native stripping removes debug sections, not
+dynamic symbols required by JNI. No app signing or update-channel changes are included.
+
 ## Automatic source selection
 
 Automatic play uses only already-cached sources and never queues a paid/account transfer automatically. Resolved links pass the existing network URL policy before launch. Selection tries at most five candidates, and screen-generation/cancellation guards prevent an abandoned request from starting playback. Episode catalogue prefetches use the existing authenticated TMDB client; no credentials or provider links are logged.

@@ -1,5 +1,17 @@
 # Status
 
+## FreeLinks optimization candidate — 28 October 2026
+
+Work is limited to the FreeLinks app copy. Default APK packaging is ARM64 for the owner's S905X5M;
+emulator builds explicitly select x86_64. Native stripping, bounded/coalesced TMDB catalogue
+requests, memory-pressure cache cleanup and idle artwork-thread retirement are included. Two
+legacy helpers used only by instrumentation moved out of production source. UI structure,
+provider definitions/URLs, playback engines, accounts, history and actual channel migration stay
+unchanged. The original MovieHub repository and update feeds are not modified or published.
+
+Local and GitHub results are recorded in the optimization PR. Physical-box verification remains
+outstanding; the chipset supports ARM64 but the firmware's supported app ABI has not been read.
+
 ## Rolled back to 1.0.12 code — 1.0.16, 28 October 2026
 
 The owner reported 1.0.15 as broken and asked to return to 1.0.12. The source tree is restored exactly to the 1.0.12 publish commit `c36ff6c` (only this note and the changelog differ) and published as 1.0.16 (code 116), because the updater rejects lower version codes. The 1.0.13–1.0.15 work remains in Git history if any of it is wanted back later. Sections below describing 1.0.12 apply to this build.

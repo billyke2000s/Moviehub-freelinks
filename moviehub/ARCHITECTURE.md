@@ -1,5 +1,29 @@
 # Architecture
 
+## FreeLinks ARM64 and backend optimizations
+
+The default native ABI is ARM64. `moviehubAbi=x86_64` is an explicit emulator-build override, not
+a second bundled architecture. NDK 27.2.12479018 supplies native stripping tools. The APK inspector
+checks the actual native directory and rejects retained ELF debug sections. No shrinking/renaming
+of JNI or Python entry points is enabled as part of this change.
+
+`CatalogueCache` coalesces concurrent identical TMDB requests without holding its lock during
+network work. A per-MediaRepository LRU retains at most 64 replies and 2 MiB of UTF-16 payload
+weight for 60 seconds. Keys include the full authenticated TMDB request, so accounts cannot share
+entries. Bodies are parsed before insertion and reparsed into independent JSON objects for each
+caller. Failed/oversized responses are not retained. Clearing increments a generation so an
+in-flight request cannot repopulate a cache cleared for memory pressure. Premiumize, Xtream,
+provider links and playback traffic are never cached by this component.
+
+`MainActivity` responds to Android memory pressure by clearing catalogue replies and trimming
+artwork's existing LRU. Bitmaps are not recycled while views may retain them. Artwork workers
+expire after 30 seconds idle; concurrency and ordering stay unchanged. Artwork disk reads/writes
+are capped at 3 MiB per image and keep the existing SHA-256-derived filenames.
+
+`ChannelStore` and `ProviderGuide` had no production callers and now live in androidTest, where
+legacy database and guide fixtures still use them. ChannelImporter retains the actual legacy
+database migration. No provider definitions or UI layouts are changed.
+
 ## Series continuation and automatic play
 
 `SeriesPlayback` prefetches next-episode metadata on the existing I/O pool and verifies real episode numbers and air dates before crossing a season boundary. It updates both the season and the history key. `EpisodeOrder` holds plain-Java ordering rules. `AutoPlayback` bounds selection to five cached sources, ranks them through `SourceRanking`, and uses `VideoFiles` to select movies or exact episodes; screen-generation and cancellation guards prevent late automatic playback. `KeyBar` registers with the active `MainActivity` screen, so hardware colours are routed before focused widgets. Screen changes clear that registration.

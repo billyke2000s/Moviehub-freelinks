@@ -4,11 +4,17 @@ plugins { id 'com.android.application'; id 'com.chaquo.python' }
 // package, data, launcher role and update feed, so a test build installs beside normal MovieHub.
 // Normal builds: package local.tv.home, label MovieHub, home-screen role, android-tv-latest feed.
 def experimental = project.hasProperty('experimental')
+// S905X5M release target. CI may select x86_64 explicitly for emulator-only debug builds.
+def moviehubAbi = providers.gradleProperty('moviehubAbi').getOrElse('arm64-v8a')
+if (!(moviehubAbi in ['arm64-v8a', 'x86_64'])) {
+    throw new GradleException('moviehubAbi must be arm64-v8a or the x86_64 emulator target')
+}
 android {
     namespace 'local.tv.home'
     compileSdk 35
     defaultConfig { applicationId 'local.tv.home'; minSdk 28; targetSdk 35; versionCode Integer.parseInt(System.getenv('APK_VERSION_CODE') ?: '2'); versionName System.getenv('APK_VERSION_NAME') ?: '0.2' }
-    defaultConfig { ndk { abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64', 'x86' } }
+    ndkVersion '27.2.12479018'
+    defaultConfig { ndk { abiFilters moviehubAbi } }
     defaultConfig { testInstrumentationRunner 'local.tv.home.MovieHubTestRunner' }
     defaultConfig {
         if (experimental) applicationId 'local.tv.home.experimental'

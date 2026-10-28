@@ -1,5 +1,15 @@
 ## 1.0.16 (28 October 2026)
 
+## Unreleased — FreeLinks ARM64 optimization
+
+- Build ARM64-only APKs for the S905X5M target; use an explicit x86_64 emulator override.
+- Pin native stripping tools and inspect the real release APK for extra ABIs/debug sections.
+- Reuse/coalesce identical TMDB catalogue requests with bounded one-minute memory retention.
+- Release catalogue/artwork cache memory under pressure and expire idle artwork workers.
+- Bound artwork disk reads and replace formatted cache-key generation with compatible hex encoding.
+- Move test-only legacy database/guide helpers out of the shipped app. Preserve all UI and providers.
+- Add real Android build/lint and existing emulator regressions to the copied project's CI.
+
 - Rollback: same app as 1.0.12. Removes the 1.0.13 audio badges, 1.0.14 stuck-link switching and 1.0.15 runtime/metadata/Play sources changes at the owner's request, because 1.0.15 misbehaved. Published with a higher version number so installed TVs accept it.
 
 ## 1.0.12 (27 October 2026)

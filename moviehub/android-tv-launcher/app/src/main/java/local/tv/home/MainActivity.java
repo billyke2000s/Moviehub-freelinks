@@ -494,6 +494,22 @@ public class MainActivity extends TvActivity implements LiveScreen.Owner {
     }
 
     @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
+            if (media != null) media.trimMemory();
+            Artwork.trimMemory(level >= android.content.ComponentCallbacks2.TRIM_MEMORY_BACKGROUND);
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (media != null) media.trimMemory();
+        Artwork.trimMemory(true);
+    }
+
+    @Override
     public void onBackPressed() {
         if (back != null) back.run();
     }
