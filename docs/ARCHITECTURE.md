@@ -1,5 +1,17 @@
 # Architecture and Future Content Contracts
 
+## Copied Android application — 28 October 2026
+
+`moviehub/` contains the complete tracked MovieHub source tree at
+`fae35002a60879b213011c85322329c2bc3728cc` as an unchanged baseline for the owner-requested rewrite.
+Its Android project, provider engine, tests, documentation and licenses remain together; see
+`moviehub/ARCHITECTURE.md` for that application's actual architecture. The original root-level
+`scripts/`, `streams/` and `output/` retain their existing converter/publication roles.
+
+The app's nested workflows are retained for reference and are not active GitHub workflows.
+The root copy-verification workflow runs the existing offline Java, Python and Node checks.
+No runtime integration between the copied app and the FreeLinks converters is introduced here.
+
 ## Separation of responsibilities
 **MovieHub Android TV**: TMDB browsing, posters, navigation, authentication/settings, player UI, favourites, resume and binge/next episode logic.
 

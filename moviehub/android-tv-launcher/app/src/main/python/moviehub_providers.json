@@ -1,0 +1,682 @@
+[
+  {
+    "id": "scrubs:watchserieshd_stream",
+    "module": "moviehub_scrubs.providers.watchserieshd_stream",
+    "family": "scrubs",
+    "name": "watchserieshd_stream",
+    "sha256": "c44a8ee5e9de901c36ba79f6a76744dde329474c1591bf516f3ce3245aecab88",
+    "site": "watchserieshd.stream",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:watchug_com",
+    "module": "moviehub_scrubs.providers.watchug_com",
+    "family": "scrubs",
+    "name": "watchug_com",
+    "sha256": "e51dcd484aa9fa8535991b5b6e3e00ad21125ed15a0a50be31fd02c3a13e491c",
+    "site": "watchug.com",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:watchtvseries_net",
+    "module": "moviehub_scrubs.providers.watchtvseries_net",
+    "family": "scrubs",
+    "name": "watchtvseries_net",
+    "sha256": "8a5d538fd23f593fb50873cf136269454686be456f1e7d00d5d28ff6ec6bb0f1",
+    "site": "watch-tvseries.net",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:filmxy_pw",
+    "module": "moviehub_scrubs.providers.filmxy_pw",
+    "family": "scrubs",
+    "name": "filmxy_pw",
+    "sha256": "46c01ebda1270dfb47b722423d36fb8947d0b4f7227351d412a641251e4b9de0",
+    "site": "filmxy.online",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:m4uhd_tv",
+    "module": "moviehub_scrubs.providers.m4uhd_tv",
+    "family": "scrubs",
+    "name": "m4uhd_tv",
+    "sha256": "6a655f740040f6e50fd69f9735b58fc579b4288d3ea8460fe6a13f6028d651f9",
+    "site": "ww1.m4uhd.tv",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:sflixz_watch",
+    "module": "moviehub_scrubs.providers.sflixz_watch",
+    "family": "scrubs",
+    "name": "sflixz_watch",
+    "sha256": "d13445efa98cea890c31907203aa3f7f20733ef874b768521124e3fd70a55acc",
+    "site": "sflixz.watch",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:movies4fun_net",
+    "module": "moviehub_scrubs.providers.movies4fun_net",
+    "family": "scrubs",
+    "name": "movies4fun_net",
+    "sha256": "2d070e02291683f02b215ea00905ad2a95f825d36af10060ea5614d1176b5242",
+    "site": "movies4fun.net",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:dopebox_to",
+    "module": "moviehub_scrubs.providers.dopebox_to",
+    "family": "scrubs",
+    "name": "dopebox_to",
+    "sha256": "47f4a932d3636e22a9f8a5dc5abe34fc01ea42d699ea085d3afd18beda6dfee2",
+    "site": "dopebox.to",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:gogoanime_bid",
+    "module": "moviehub_scrubs.providers.gogoanime_bid",
+    "family": "scrubs",
+    "name": "gogoanime_bid",
+    "sha256": "70a3482e1fa5bd34b3353bb04e99b1952bfa4e1db33641064147db3f782eb45e",
+    "site": "anitaku.pe",
+    "movies": false,
+    "series": true
+  },
+  {
+    "id": "scrubs:movie4u_live",
+    "module": "moviehub_scrubs.providers.movie4u_live",
+    "family": "scrubs",
+    "name": "movie4u_live",
+    "sha256": "99b842570e25f1bba66e78aaa03cbf48784dd9deb735fd65501f5c51c1028aa8",
+    "site": "www1.movie4u.live",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:upmovies_net",
+    "module": "moviehub_scrubs.providers.upmovies_net",
+    "family": "scrubs",
+    "name": "upmovies_net",
+    "sha256": "94491a204d980bbb3a9543c3063bf95c25ea8ae0f5cd9a33179cdc46cfa813c0",
+    "site": "upmovies.net",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:1movies_la",
+    "module": "moviehub_scrubs.providers.1movies_la",
+    "family": "scrubs",
+    "name": "1movies_la",
+    "sha256": "d1166b2cd158a7ebdd155ee9610099831638be5e3453f1f7d7cb579315b3920f",
+    "site": "1movies.la",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:putlocker_gives",
+    "module": "moviehub_scrubs.providers.putlocker_gives",
+    "family": "scrubs",
+    "name": "putlocker_gives",
+    "sha256": "8f0c30df383722f103466d5a30c12651e7b9119af448f0241241ad23144558b0",
+    "site": "putlocker.gives",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:tvmovieflix_com",
+    "module": "moviehub_scrubs.providers.tvmovieflix_com",
+    "family": "scrubs",
+    "name": "tvmovieflix_com",
+    "sha256": "54020aff07f3f1456a9900afea74f0115465570706c40e1ac7ba2a067f13c1fd",
+    "site": "tvmovieflix.com",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:winnoise_com",
+    "module": "moviehub_scrubs.providers.winnoise_com",
+    "family": "scrubs",
+    "name": "winnoise_com",
+    "sha256": "f1312671943fc94a2d2212a9d9ad7f63b63f6fea0124c79ebc62a83a2e01d935",
+    "site": "winnoise.com",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:bstsrs_one",
+    "module": "moviehub_scrubs.providers.bstsrs_one",
+    "family": "scrubs",
+    "name": "bstsrs_one",
+    "sha256": "6624f78cc3fa7d38267980c3beee833b6eacba47127c30b9cbf7bab3bdeaca2a",
+    "site": "bstsrs.in",
+    "movies": false,
+    "series": true
+  },
+  {
+    "id": "scrubs:noxx_to",
+    "module": "moviehub_scrubs.providers.noxx_to",
+    "family": "scrubs",
+    "name": "noxx_to",
+    "sha256": "6047448dba17986d5f950a9c5f76e18bca1454fe94e13729992297d8bec18041",
+    "site": "noxx.to",
+    "movies": false,
+    "series": true
+  },
+  {
+    "id": "scrubs:library",
+    "module": "moviehub_scrubs.providers.library",
+    "family": "scrubs",
+    "name": "library",
+    "sha256": "f791e7f42948842667408185613614bd7a37f8e0dac697f90e9d7e004ea8f8cb",
+    "site": "",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:bluray7_com",
+    "module": "moviehub_scrubs.providers.bluray7_com",
+    "family": "scrubs",
+    "name": "bluray7_com",
+    "sha256": "376cf7367eb6211e2f655fbb106d1c6df308f12304d96807398110a6ac495c2b",
+    "site": "bluray7.com",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:flixhq_to",
+    "module": "moviehub_scrubs.providers.flixhq_to",
+    "family": "scrubs",
+    "name": "flixhq_to",
+    "sha256": "2c43ebbb6f5f5fd058716b8e581793eb975be6682002238b1615bc94efaa135d",
+    "site": "flixhq.to",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:himovies_top",
+    "module": "moviehub_scrubs.providers.himovies_top",
+    "family": "scrubs",
+    "name": "himovies_top",
+    "sha256": "4eb2f3a3ddd986e132b9362cac03d65b9e22c53b515c7f709a4e4a85b75ed005",
+    "site": "hdtoday.cc",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:series9mx_pro",
+    "module": "moviehub_scrubs.providers.series9mx_pro",
+    "family": "scrubs",
+    "name": "series9mx_pro",
+    "sha256": "3535e2cc4e3d9b11ae8417f421f5631b9cb2d8ab4e17d9cf6dee200d96e7a876",
+    "site": "series9mx.pro",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:couchtuner_show",
+    "module": "moviehub_scrubs.providers.couchtuner_show",
+    "family": "scrubs",
+    "name": "couchtuner_show",
+    "sha256": "7aed355f027e19f50eb90edd59e8412564377e52865fcb659832b1537cdca16f",
+    "site": "couchtuner.show",
+    "movies": false,
+    "series": true
+  },
+  {
+    "id": "scrubs:projectfreetv_cyou",
+    "module": "moviehub_scrubs.providers.projectfreetv_cyou",
+    "family": "scrubs",
+    "name": "projectfreetv_cyou",
+    "sha256": "2e58c1fe02639bd38520f0f225910640df3222842067bab0f15d4575c8ef87c7",
+    "site": "freeprojecttv.cyou",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:filepursuit",
+    "module": "moviehub_scrubs.providers.filepursuit",
+    "family": "scrubs",
+    "name": "filepursuit",
+    "sha256": "ee8ba6873850c39b464fbb01eea786c7b96a3093689f48796e1f241bbd780f52",
+    "site": "filepursuit.p.rapidapi.com",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:doomovies_ga",
+    "module": "moviehub_scrubs.providers.doomovies_ga",
+    "family": "scrubs",
+    "name": "doomovies_ga",
+    "sha256": "c149051bcf43248d7c73157c690aa306443086743efcb569b3b38a03b56e89da",
+    "site": "doomovies.net",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:cinebox_cc",
+    "module": "moviehub_scrubs.providers.cinebox_cc",
+    "family": "scrubs",
+    "name": "cinebox_cc",
+    "sha256": "02447f1727243ac3e6b839957f5186d1c838f2d0eb25ed8200398455bc30ee2e",
+    "site": "cinebox.cc",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:flixwave_me",
+    "module": "moviehub_scrubs.providers.flixwave_me",
+    "family": "scrubs",
+    "name": "flixwave_me",
+    "sha256": "049ba3ed68334afd03ab5c368b0461e01a770e0cd1ca0bd6af6657ef275a2aa3",
+    "site": "flixwave.me",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:123moviestv_me",
+    "module": "moviehub_scrubs.providers.123moviestv_me",
+    "family": "scrubs",
+    "name": "123moviestv_me",
+    "sha256": "c5e6ba555f99bbe6f9318fbf5bc1d294d79db46a9c6c6ab5b33d36b27716e0ce",
+    "site": "123moviestv.me",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:series9movies_com",
+    "module": "moviehub_scrubs.providers.series9movies_com",
+    "family": "scrubs",
+    "name": "series9movies_com",
+    "sha256": "771eb5926610cf5af57ed232e5f63dcc4fd073d96c715d74388b42f7f2f17a1b",
+    "site": "series9movies.com",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:moviesnipipay_me",
+    "module": "moviehub_scrubs.providers.moviesnipipay_me",
+    "family": "scrubs",
+    "name": "moviesnipipay_me",
+    "sha256": "79d7d5e8f7ec8de03287b1d433f49a5eec5cbb9eb3e2f5b098975501da5b594a",
+    "site": "moviesnipipay.me",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:rarefilmm_com",
+    "module": "moviehub_scrubs.providers.rarefilmm_com",
+    "family": "scrubs",
+    "name": "rarefilmm_com",
+    "sha256": "d9a2814a96b553c1d1e1b6352380fe69cc70bf48baba813fe366458b62f69608",
+    "site": "rarefilmm.com",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:myflixer_it",
+    "module": "moviehub_scrubs.providers.myflixer_it",
+    "family": "scrubs",
+    "name": "myflixer_it",
+    "sha256": "6361211e58a252797e79e908e8227f76067341c16a951d39538bdf1a9c9c46ff",
+    "site": "myflixer.pw",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:m4ufree_se",
+    "module": "moviehub_scrubs.providers.m4ufree_se",
+    "family": "scrubs",
+    "name": "m4ufree_se",
+    "sha256": "d58b6f2d961479a0e4de30fd9c12915d30fbe460ffb68349d9b8feaae11b5d97",
+    "site": "m4ufree.se",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:tinyzonetv_to",
+    "module": "moviehub_scrubs.providers.tinyzonetv_to",
+    "family": "scrubs",
+    "name": "tinyzonetv_to",
+    "sha256": "98a96d8aa8649c75b2402037163226ab592eb00095dfd3d70db3e3b47038fb87",
+    "site": "ev01.to",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:tubitv_com",
+    "module": "moviehub_scrubs.providers.tubitv_com",
+    "family": "scrubs",
+    "name": "tubitv_com",
+    "sha256": "47982108686689a65eff3bd31785f4f46f4b1502232ee1452cf683292c630056",
+    "site": "tubitv.com",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:hdbest_net",
+    "module": "moviehub_scrubs.providers.hdbest_net",
+    "family": "scrubs",
+    "name": "hdbest_net",
+    "sha256": "b253fc19545c8c09b46ba8fa149026412a3d8f067eaff4b78682d60936de4267",
+    "site": "hdbest.net",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:goojara_club",
+    "module": "moviehub_scrubs.providers.goojara_club",
+    "family": "scrubs",
+    "name": "goojara_club",
+    "sha256": "23927842185da0647562b4dc8459ba39eaa5aa2b01103dbcca663d6a05c06784",
+    "site": "goojara.club",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:bnwmovies_com",
+    "module": "moviehub_scrubs.providers.bnwmovies_com",
+    "family": "scrubs",
+    "name": "bnwmovies_com",
+    "sha256": "de15370640ffd6a6e7f87d34f476ea3e1874f917fe5efd30e282f5bd0b53ec03",
+    "site": "bnwmovies.com",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:pressplay_top",
+    "module": "moviehub_scrubs.providers.pressplay_top",
+    "family": "scrubs",
+    "name": "pressplay_top",
+    "sha256": "38bd234c2ab06b13e37298a32e26437d45c259471bf0899580843c2f0255a86d",
+    "site": "pressplay.top",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:levidiamovies_club",
+    "module": "moviehub_scrubs.providers.levidiamovies_club",
+    "family": "scrubs",
+    "name": "levidiamovies_club",
+    "sha256": "cb7ee5233a5c41151781c29b8cbf01772b7ffc11986c9977084377ed243c0c40",
+    "site": "goojara.life",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:gogoanime_tel",
+    "module": "moviehub_scrubs.providers.gogoanime_tel",
+    "family": "scrubs",
+    "name": "gogoanime_tel",
+    "sha256": "03f3f8969aeb9878609cbf6c796fb91f5f7f48409af7a5d63d50bdfbc601f664",
+    "site": "gogoanime3.co",
+    "movies": false,
+    "series": true
+  },
+  {
+    "id": "scrubs:anymovies_co",
+    "module": "moviehub_scrubs.providers.anymovies_co",
+    "family": "scrubs",
+    "name": "anymovies_co",
+    "sha256": "85cdab3edeb9dcb136bf90ecd4c587003f0d9b14a6e926d45d8220f5f37ed9dc",
+    "site": "downloads-anymovies.co",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:tvids_net",
+    "module": "moviehub_scrubs.providers.tvids_net",
+    "family": "scrubs",
+    "name": "tvids_net",
+    "sha256": "28fd79502b4a0dfb72621ea1c7b67c06883e3adb1d83628f26086cdc8de36678",
+    "site": "tvids.net",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:gogoanimes_to",
+    "module": "moviehub_scrubs.providers.gogoanimes_to",
+    "family": "scrubs",
+    "name": "gogoanimes_to",
+    "sha256": "3074a2098dd4bba0a7d57187e727758a78c337767fbb3ddf4f3b16b29543779d",
+    "site": "gogoanimes.to",
+    "movies": false,
+    "series": true
+  },
+  {
+    "id": "scrubs:okmov_to",
+    "module": "moviehub_scrubs.providers.okmov_to",
+    "family": "scrubs",
+    "name": "okmov_to",
+    "sha256": "172d9563b8e5fab727bdb57d9b99095a50ae56c9ee4af3949fc9fbc8764de784",
+    "site": "okmov.to",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:watchseries_cyou",
+    "module": "moviehub_scrubs.providers.watchseries_cyou",
+    "family": "scrubs",
+    "name": "watchseries_cyou",
+    "sha256": "744e1cd4929feb064aa1cef6792d64f229a039925ecbb72ca89baf451398d43c",
+    "site": "watchseries.cyou",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:123movies_skin",
+    "module": "moviehub_scrubs.providers.123movies_skin",
+    "family": "scrubs",
+    "name": "123movies_skin",
+    "sha256": "c1209d36fb5e421e225a485b93a159fd327dd80ec789f3b50f4f39e191b19aef",
+    "site": "123-movies.golf",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:vumoo_mx",
+    "module": "moviehub_scrubs.providers.vumoo_mx",
+    "family": "scrubs",
+    "name": "vumoo_mx",
+    "sha256": "7fafaded2d458db99ef4348cf6c840e40533e599c3a5f898cfbd57ad84802044",
+    "site": "vumoo.mx",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:gdriveplayer_us",
+    "module": "moviehub_scrubs.providers.gdriveplayer_us",
+    "family": "scrubs",
+    "name": "gdriveplayer_us",
+    "sha256": "1a98ca6306c17c18c6e9f6bc7762d1516c800ee59dc58e0daa6f11ca200a2093",
+    "site": "api.gdriveplayer.us",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:iwaatch_com",
+    "module": "moviehub_scrubs.providers.iwaatch_com",
+    "family": "scrubs",
+    "name": "iwaatch_com",
+    "sha256": "4b738d1fa6b1d03eed06c4551942e8001cae8cd7a7e640867d490bae174d6efc",
+    "site": "iwaatch.com",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "scrubs:levidia_ch",
+    "module": "moviehub_scrubs.providers.levidia_ch",
+    "family": "scrubs",
+    "name": "levidia_ch",
+    "sha256": "dea2f04fc61a9fd979035a1e58405298893e002613215a82126bd3ec8e4048e0",
+    "site": "levidia.ch",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:projectfreetv_lol",
+    "module": "moviehub_scrubs.providers.projectfreetv_lol",
+    "family": "scrubs",
+    "name": "projectfreetv_lol",
+    "sha256": "8f425fdb6a93d6b16f2c128291c3560c1f4a38b03ce836b51f63f0a2c694532a",
+    "site": "projectfreetv.lol",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:goojara_to",
+    "module": "moviehub_scrubs.providers.goojara_to",
+    "family": "scrubs",
+    "name": "goojara_to",
+    "sha256": "bb7d152c2a44d2b74ccc6bc9b30cca4117db124184a99836cbc055228ae2b569",
+    "site": "goojara.to",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:movies2watch_tv",
+    "module": "moviehub_scrubs.providers.movies2watch_tv",
+    "family": "scrubs",
+    "name": "movies2watch_tv",
+    "sha256": "d1a8a6d50c90fad8865266f1ceaf3a131f581b300bf888b9316e8d56a45879dc",
+    "site": "movies2watch.tv",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:tvseries_video",
+    "module": "moviehub_scrubs.providers.tvseries_video",
+    "family": "scrubs",
+    "name": "tvseries_video",
+    "sha256": "65f97f5408a070eaf47b4f14ad7f03a17e579ae6384b060259f2531a54c21c66",
+    "site": "tvseries.video",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:streamlord_com",
+    "module": "moviehub_scrubs.providers.streamlord_com",
+    "family": "scrubs",
+    "name": "streamlord_com",
+    "sha256": "275ceb3202cfb163d657c031e07a9af4a91d7c7284a09ad5407701785f32cd7f",
+    "site": "streamlord.com",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:9pm_to",
+    "module": "moviehub_scrubs.providers.9pm_to",
+    "family": "scrubs",
+    "name": "9pm_to",
+    "sha256": "bf4a0e37a01fa755ca1b0371f89b757b5db950d70f41d374248abbd0745c7726",
+    "site": "9pm.to",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "scrubs:soap2day_fan",
+    "module": "moviehub_scrubs.providers.soap2day_fan",
+    "family": "scrubs",
+    "name": "soap2day_fan",
+    "sha256": "6e5f2f39a839487e964996728495441ab5625153657714d88c03c1d20494b2a3",
+    "site": "soap2dayz.top",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "free99:tvseries_in",
+    "module": "moviehub_free99.providers.tvseries_in",
+    "family": "free99",
+    "name": "tvseries_in",
+    "sha256": "b89272fa31a725627b1eae1fe2cff29c62a389756a818e889facb93e760fbf2b",
+    "site": "tvseries.in",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "free99:fzmovies_live",
+    "module": "moviehub_free99.providers.fzmovies_live",
+    "family": "free99",
+    "name": "fzmovies_live",
+    "sha256": "89ff6b400045dec2144d79cbfa43fa0928e4b6abe4739c387fa894fd6c6f8c4b",
+    "site": "fzmovies.live",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "free99:my4hydra_top",
+    "module": "moviehub_free99.providers.my4hydra_top",
+    "family": "free99",
+    "name": "my4hydra_top",
+    "sha256": "93535d0fbbcc474b1c76dc3a7e5ff79147aac55607b583c6df7c4e36ba65a6bf",
+    "site": "mp4hydra.top",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "free99:stagatv_com",
+    "module": "moviehub_free99.providers.stagatv_com",
+    "family": "free99",
+    "name": "stagatv_com",
+    "sha256": "4160464edf69073026cb29a4f8488d44f9d071e02129c705f9bb87628b332768",
+    "site": "m.stagatv.com",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "free99:naijavault_com",
+    "module": "moviehub_free99.providers.naijavault_com",
+    "family": "free99",
+    "name": "naijavault_com",
+    "sha256": "d5054086998543155dd5d42181d8cbd322d47a64cb3a771f6690fa302ccb72c5",
+    "site": "naijavault.com",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "free99:bnwmovies_com",
+    "module": "moviehub_free99.providers.bnwmovies_com",
+    "family": "free99",
+    "name": "bnwmovies_com",
+    "sha256": "de15370640ffd6a6e7f87d34f476ea3e1874f917fe5efd30e282f5bd0b53ec03",
+    "site": "bnwmovies.com",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "free99:anymovies_co",
+    "module": "moviehub_free99.providers.anymovies_co",
+    "family": "free99",
+    "name": "anymovies_co",
+    "sha256": "85cdab3edeb9dcb136bf90ecd4c587003f0d9b14a6e926d45d8220f5f37ed9dc",
+    "site": "downloads-anymovies.co",
+    "movies": true,
+    "series": false
+  },
+  {
+    "id": "free99:seriesloaded_ng",
+    "module": "moviehub_free99.providers.seriesloaded_ng",
+    "family": "free99",
+    "name": "seriesloaded_ng",
+    "sha256": "18ec5473960026367b5f61accf17de626ab28035094ae02f4731c3e78bc64c5e",
+    "site": "seriezloaded.com.ng",
+    "movies": true,
+    "series": true
+  },
+  {
+    "id": "free99:levidia_ch",
+    "module": "moviehub_free99.providers.levidia_ch",
+    "family": "free99",
+    "name": "levidia_ch",
+    "sha256": "124cedc33b024dccad961f6ee2e2d947617458bc590f307ef108357fb53b72f3",
+    "site": "levidia.ch",
+    "movies": true,
+    "series": true
+  }
+]

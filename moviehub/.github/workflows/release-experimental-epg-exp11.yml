@@ -1,0 +1,120 @@
+name: Publish MovieHub Experimental combined EPG and ZLive
+# Builds the separate "MovieHub Experimental" app (package local.tv.home.experimental) from the
+# chosen branch and publishes it to the android-tv-experimental pre-release. It never touches the
+# android-tv-latest feed that normal MovieHub installs update from.
+on:
+  push:
+    branches: [release/experimental-epg-exp11]
+    paths: ['.github/workflows/release-experimental-epg-exp11.yml']
+permissions:
+  contents: write
+concurrency:
+  group: publish-experimental
+  cancel-in-progress: false
+jobs:
+  experimental:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.6.0'
+      - name: Require passing candidate validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PYGUARD'
+          import json,subprocess
+          sha='bce7bdaeb95100d8005ba3a2c2bfb69da2444d3a'
+          parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
+          if parent != sha: raise SystemExit('Release parent differs from the validated candidate')
+          data=json.loads(subprocess.check_output(['gh','api',f'repos/{__import__("os").environ["GITHUB_REPOSITORY"]}/actions/runs?head_sha={sha}&per_page=100'],text=True))
+          for name in ['Build Android TV launcher APK','Standalone provider engine']:
+              runs=[r for r in data['workflow_runs'] if r['name']==name and r['event']=='pull_request']
+              if not runs or max(runs,key=lambda r:r['id'])['conclusion']!='success':
+                  raise SystemExit('Candidate validation has not passed: '+name)
+          PYGUARD
+      - name: Verify core rules
+        run: bash android-tv-launcher/tests/run-core-tests.sh
+      - name: Build signed experimental APK and manifest
+        env:
+          APK_KEYSTORE_BASE64: ${{ secrets.APK_KEYSTORE_BASE64 }}
+          APK_STORE_PASSWORD: ${{ secrets.APK_STORE_PASSWORD }}
+          APK_KEY_ALIAS: ${{ secrets.APK_KEY_ALIAS }}
+          APK_KEY_PASSWORD: ${{ secrets.APK_KEY_PASSWORD }}
+          APK_VERSION_CODE: '15'
+          APK_VERSION_NAME: exp-11
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64,json,os,pathlib,subprocess
+          code=int(os.environ['APK_VERSION_CODE'])
+          if not 2 < code < 2100000000: print('::error title=Version code::must be an integer above 2'); raise SystemExit(1)
+          for key in ['APK_KEYSTORE_BASE64','APK_STORE_PASSWORD','APK_KEY_ALIAS','APK_KEY_PASSWORD']:
+              if not os.environ.get(key): print('::error title=Signing::Configure the APK signing secrets before publishing'); raise SystemExit(1)
+          existing=subprocess.run(['gh','release','view','android-tv-experimental','--json','tagName'],capture_output=True)
+          if existing.returncode==0:
+              subprocess.run(['gh','release','download','android-tv-experimental','--pattern','update.json','--dir',os.environ['RUNNER_TEMP']],check=True)
+              previous=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'update.json').read_text())
+              if code<=previous['versionCode']: print('::error title=Version code::must increase'); raise SystemExit(1)
+          key=pathlib.Path(os.environ['RUNNER_TEMP'])/'launcher-signing.jks'
+          key.write_bytes(base64.b64decode(os.environ['APK_KEYSTORE_BASE64'],validate=True));key.chmod(0o600)
+          PY
+          export APK_KEYSTORE="$RUNNER_TEMP/launcher-signing.jks"
+          # Report build errors as annotations, which are readable without the full log.
+          if ! gradle -p android-tv-launcher --no-daemon -Pexperimental assembleRelease > "$RUNNER_TEMP/build.log" 2>&1; then
+            grep -E "error:|FAILED|What went wrong|Error:|Lint found" -A3 "$RUNNER_TEMP/build.log" | head -40 > "$RUNNER_TEMP/errors.txt" || true
+            python3 -c "import sys;t=open(sys.argv[1]).read()[-3500:] or open(sys.argv[2]).read()[-3500:];print('::error title=Experimental build failed::'+t.replace('%','%25').replace('\r','').replace('\n','%0A'))" "$RUNNER_TEMP/errors.txt" "$RUNNER_TEMP/build.log"
+            exit 1
+          fi
+          APK=android-tv-launcher/app/build/outputs/apk/release/app-release.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" > "$RUNNER_TEMP/badging.txt"
+          grep -q "package: name='local.tv.home.experimental'" "$RUNNER_TEMP/badging.txt" || { echo "::error title=Wrong package::$(head -c 300 "$RUNNER_TEMP/badging.txt")"; exit 1; }
+          mkdir -p release-files
+          cp "$APK" release-files/moviehub-experimental.apk
+          # Same file under the name the in-app updater downloads.
+          cp "$APK" release-files/home.apk
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          apk=pathlib.Path('release-files/home.apk')
+          data=dict(packageName='local.tv.home.experimental',versionCode=int(os.environ['APK_VERSION_CODE']),versionName=os.environ['APK_VERSION_NAME'],sha256=hashlib.sha256(apk.read_bytes()).hexdigest(),notes='One daily combined EPG with cached background refresh. Improve native/country/regional matching. Add supported labelled ZLive routes and wrapped-segment decoding; live ZLive access remains unverified.')
+          pathlib.Path('release-files/update.json').write_text(json.dumps(data))
+          PY
+      - name: Publish experimental assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view android-tv-experimental >/dev/null 2>&1; then
+            gh release create android-tv-experimental --target "$GITHUB_SHA" --prerelease --latest=false --title 'MovieHub Experimental' --notes 'Separate test app (local.tv.home.experimental). Install moviehub-experimental.apk; it does not replace MovieHub.'
+          fi
+          gh release upload android-tv-experimental release-files/moviehub-experimental.apk release-files/home.apk release-files/update.json --clobber
+          cat > "$RUNNER_TEMP/epg-release-notes.md" <<'NOTES'
+          Separate MovieHub Experimental app, exp-11 (version code 15).
+
+          - Built-in EPG downloads only the finished combined guide: https://raw.githubusercontent.com/billyke2000s/Moviehub-epg/main/epg.xml.gz
+          - GitHub generates it daily at 04:37 UTC. Source inventory, coverage, failures and gaps: https://github.com/billyke2000s/Moviehub-epg/blob/main/coverage.md
+          - Conditional cached background refresh, validation and SQLite transactions preserve usable listings during failed updates. Exact native identities, country matching and regional qualifiers stay distinct.
+          - ZLive supports labelled advertised public resolver routes and PNG/WebP/raw/gzip media carriers without a token session. Exhausted sources stop with manual recovery.
+          - Live ZLive catalogue returned 404 and legacy media returned 403. Full current server inventory and successful external playback are not established; access controls and refusal cooldowns remain respected.
+
+          Android build/lint, standard and experimental emulator suites, signing compatibility and provider-engine CI must pass on the exact source candidate before this workflow publishes. No physical TV or real-account playback was verified. Settings and favourites remain on device. Refresh channels after updating if the automatic background refresh has not finished.
+          NOTES
+          gh release edit android-tv-experimental --title "MovieHub Experimental exp-11" --prerelease --latest=false --notes-file "$RUNNER_TEMP/epg-release-notes.md"
+      - name: Remove temporary signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/launcher-signing.jks"

@@ -1,0 +1,116 @@
+{"kind":"lookup","website":"free99:seriesloaded_ng","tmdb":27205,"title":"Inception","status":"ValueError","sources":0}
+{"kind":"lookup","website":"free99:seriesloaded_ng","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:seriesloaded_ng","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:iwaatch_com","tmdb":27205,"title":"Inception","status":"complete","sources":2}
+{"kind":"playback","website":"scrubs:iwaatch_com","provider":"iwaatch.com · server2.iwaatch.com","advertisedQuality":"720p","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8888,"expectedMinutes":148,"decodedFrames":78,"width":1280,"height":536,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"scrubs:iwaatch_com","provider":"iwaatch.com · server2.iwaatch.com","advertisedQuality":"1080p","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8888,"expectedMinutes":148,"decodedFrames":14,"width":1920,"height":800,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"lookup","website":"scrubs:series9movies_com","tmdb":27205,"title":"Inception","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:series9movies_com","tmdb":10331,"title":"Night of the Living Dead","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:series9movies_com","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:watchseries_cyou","tmdb":27205,"title":"Inception","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:watchseries_cyou","tmdb":10331,"title":"Night of the Living Dead","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:watchseries_cyou","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"http_403","sources":0}
+{"kind":"finished","shard":5,"shards":8}
+{"kind":"lookup","website":"free99:naijavault_com","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:naijavault_com","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:naijavault_com","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:goojara_to","tmdb":27205,"title":"Inception","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:goojara_to","tmdb":10331,"title":"Night of the Living Dead","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:goojara_to","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:rarefilmm_com","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:rarefilmm_com","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:rarefilmm_com","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:vumoo_mx","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:vumoo_mx","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:vumoo_mx","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"ConnectionError","sources":0}
+{"kind":"finished","shard":4,"shards":8}
+{"kind":"lookup","website":"free99:anymovies_co","tmdb":27205,"title":"Inception","status":"complete","sources":1}
+{"kind":"playback","website":"free99:anymovies_co","provider":"downloads-anymovies.co · mixdrop.ag","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8888,"expectedMinutes":148,"decodedFrames":84,"width":1280,"height":720,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"lookup","website":"scrubs:bluray7_com","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:bluray7_com","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:bluray7_com","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:myflixer_it","tmdb":27205,"title":"Inception","status":"ValueError","sources":0}
+{"kind":"lookup","website":"scrubs:myflixer_it","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:myflixer_it","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:tvids_net","tmdb":27205,"title":"Inception","status":"gaierror","sources":0}
+{"kind":"lookup","website":"scrubs:tvids_net","tmdb":10331,"title":"Night of the Living Dead","status":"gaierror","sources":0}
+{"kind":"lookup","website":"scrubs:tvids_net","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"gaierror","sources":0}
+{"kind":"lookup","website":"scrubs:winnoise_com","tmdb":27205,"title":"Inception","status":"ValueError","sources":0}
+{"kind":"lookup","website":"scrubs:winnoise_com","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:winnoise_com","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"finished","shard":0,"shards":8}
+{"kind":"lookup","website":"free99:tvseries_in","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:tvseries_in","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:tvseries_in","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:moviesnipipay_me","tmdb":27205,"title":"Inception","status":"unsupported_host","sources":0}
+{"kind":"lookup","website":"scrubs:moviesnipipay_me","tmdb":10331,"title":"Night of the Living Dead","status":"unsupported_host","sources":0}
+{"kind":"lookup","website":"scrubs:moviesnipipay_me","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"unsupported_host","sources":0}
+{"kind":"lookup","website":"scrubs:tubitv_com","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:tubitv_com","tmdb":10331,"title":"Night of the Living Dead","status":"complete","sources":4}
+{"kind":"playback","website":"scrubs:tubitv_com","provider":"tubitv.com · nc-fa2.tubi.video","advertisedQuality":"720p","tmdb":10331,"title":"Night of the Living Dead","separateSource":true,"durationSeconds":5758,"expectedMinutes":96,"decodedFrames":102,"width":426,"height":240,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"scrubs:tubitv_com","provider":"tubitv.com · nc-cf.tubi.video","advertisedQuality":"720p","tmdb":10331,"title":"Night of the Living Dead","separateSource":true,"durationSeconds":5758,"expectedMinutes":96,"decodedFrames":6,"width":426,"height":240,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"scrubs:tubitv_com","provider":"tubitv.com · nc-fa2.tubi.video","advertisedQuality":"720p","tmdb":10331,"title":"Night of the Living Dead","separateSource":true,"durationSeconds":5734,"expectedMinutes":96,"decodedFrames":57,"width":480,"height":360,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"scrubs:tubitv_com","provider":"tubitv.com · nc-cf.tubi.video","advertisedQuality":"720p","tmdb":10331,"title":"Night of the Living Dead","separateSource":true,"durationSeconds":5734,"expectedMinutes":96,"decodedFrames":6,"width":480,"height":360,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"lookup","website":"scrubs:watchtvseries_net","tmdb":27205,"title":"Inception","status":"gaierror","sources":0}
+{"kind":"lookup","website":"scrubs:watchtvseries_net","tmdb":10331,"title":"Night of the Living Dead","status":"gaierror","sources":0}
+{"kind":"lookup","website":"scrubs:watchtvseries_net","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"gaierror","sources":0}
+{"kind":"finished","shard":7,"shards":8}
+{"kind":"lookup","website":"free99:levidia_ch","tmdb":27205,"title":"Inception","status":"complete","sources":6}
+{"kind":"playback","website":"free99:levidia_ch","provider":"levidia.ch · luluvdo.com","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":119,"width":1280,"height":536,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"free99:levidia_ch","provider":"levidia.ch · luluvdo.com","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":0,"expectedMinutes":148,"decodedFrames":0,"width":1280,"height":536,"decoded":false,"plausibleRuntime":false,"midpointDecoded":false,"measured4k":false,"status":"no_decoded_video"}
+{"kind":"playback","website":"free99:levidia_ch","provider":"levidia.ch · luluvdo.com","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":0,"expectedMinutes":148,"decodedFrames":0,"width":1280,"height":536,"decoded":false,"plausibleRuntime":false,"midpointDecoded":false,"measured4k":false,"status":"no_decoded_video"}
+{"kind":"playback","website":"free99:levidia_ch","provider":"levidia.ch · luluvdo.com","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":7,"width":1920,"height":800,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"free99:levidia_ch","provider":"levidia.ch · luluvdo.com","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":9,"width":1920,"height":800,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"free99:levidia_ch","provider":"levidia.ch · luluvdo.com","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":7,"width":1920,"height":800,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"lookup","website":"scrubs:goojara_club","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:goojara_club","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:goojara_club","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:projectfreetv_cyou","tmdb":27205,"title":"Inception","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:projectfreetv_cyou","tmdb":10331,"title":"Night of the Living Dead","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:projectfreetv_cyou","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:upmovies_net","tmdb":27205,"title":"Inception","status":"ConnectionError","sources":0}
+{"kind":"lookup","website":"scrubs:upmovies_net","tmdb":10331,"title":"Night of the Living Dead","status":"SSLError","sources":0}
+{"kind":"lookup","website":"scrubs:upmovies_net","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"SSLError","sources":0}
+{"kind":"finished","shard":3,"shards":8}
+{"kind":"lookup","website":"free99:fzmovies_live","tmdb":27205,"title":"Inception","status":"complete","sources":4}
+{"kind":"playback","website":"free99:fzmovies_live","provider":"fzmovies.live · mlauahr4tc.y9a8ua48mhss5ye.cyou","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":84,"width":640,"height":360,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"free99:fzmovies_live","provider":"fzmovies.live · oj4zillubc.y9a8ua48mhss5ye.cyou","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":41,"width":640,"height":360,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"free99:fzmovies_live","provider":"fzmovies.live · mlauahr4tc.y9a8ua48mhss5ye.cyou","advertisedQuality":"720p","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":15,"width":1280,"height":720,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"free99:fzmovies_live","provider":"fzmovies.live · oj4zillubc.y9a8ua48mhss5ye.cyou","advertisedQuality":"720p","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":49,"width":1280,"height":720,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"lookup","website":"scrubs:gdriveplayer_us","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:gdriveplayer_us","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:gdriveplayer_us","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:pressplay_top","tmdb":27205,"title":"Inception","status":"http_404","sources":0}
+{"kind":"lookup","website":"scrubs:pressplay_top","tmdb":10331,"title":"Night of the Living Dead","status":"http_404","sources":0}
+{"kind":"lookup","website":"scrubs:pressplay_top","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"rejected_media","sources":0}
+{"kind":"lookup","website":"scrubs:tvseries_video","tmdb":27205,"title":"Inception","status":"gaierror","sources":0}
+{"kind":"lookup","website":"scrubs:tvseries_video","tmdb":10331,"title":"Night of the Living Dead","status":"gaierror","sources":0}
+{"kind":"lookup","website":"scrubs:tvseries_video","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"finished","shard":2,"shards":8}
+{"kind":"lookup","website":"free99:stagatv_com","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:stagatv_com","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:stagatv_com","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:m4uhd_tv","tmdb":27205,"title":"Inception","status":"complete","sources":1}
+{"kind":"playback","website":"scrubs:m4uhd_tv","provider":"m4uhdpro.net · abyssplayer.com","advertisedQuality":"SD","tmdb":27205,"title":"Inception","separateSource":true,"durationSeconds":8887,"expectedMinutes":148,"decodedFrames":84,"width":1920,"height":800,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"lookup","website":"scrubs:series9mx_pro","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:series9mx_pro","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:series9mx_pro","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:watchserieshd_stream","tmdb":27205,"title":"Inception","status":"SSLError","sources":0}
+{"kind":"lookup","website":"scrubs:watchserieshd_stream","tmdb":10331,"title":"Night of the Living Dead","status":"SSLError","sources":0}
+{"kind":"lookup","website":"scrubs:watchserieshd_stream","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"SSLError","sources":0}
+{"kind":"finished","shard":6,"shards":8}
+{"kind":"lookup","website":"free99:bnwmovies_com","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"free99:bnwmovies_com","tmdb":10331,"title":"Night of the Living Dead","status":"complete","sources":2}
+{"kind":"playback","website":"free99:bnwmovies_com","provider":"bnwmovies.com · archive.org","advertisedQuality":"SD","tmdb":10331,"title":"Night of the Living Dead","separateSource":true,"durationSeconds":5740,"expectedMinutes":96,"decodedFrames":72,"width":0,"height":0,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"playback","website":"free99:bnwmovies_com","provider":"bnwmovies.com · archive.org","advertisedQuality":"SD","tmdb":10331,"title":"Night of the Living Dead","separateSource":true,"durationSeconds":5740,"expectedMinutes":96,"decodedFrames":74,"width":320,"height":240,"decoded":true,"plausibleRuntime":true,"midpointDecoded":true,"measured4k":false,"status":"verified"}
+{"kind":"lookup","website":"scrubs:doomovies_ga","tmdb":27205,"title":"Inception","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:doomovies_ga","tmdb":10331,"title":"Night of the Living Dead","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:doomovies_ga","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:okmov_to","tmdb":27205,"title":"Inception","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:okmov_to","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:okmov_to","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:tvmovieflix_com","tmdb":27205,"title":"Inception","status":"http_403","sources":0}
+{"kind":"lookup","website":"scrubs:tvmovieflix_com","tmdb":10331,"title":"Night of the Living Dead","status":"no_matches","sources":0}
+{"kind":"lookup","website":"scrubs:tvmovieflix_com","tmdb":969681,"title":"Spider-Man: Brand New Day","status":"complete","sources":1}
+{"kind":"playback","website":"scrubs:tvmovieflix_com","provider":"tvmovieflix.com · vinovo.si","advertisedQuality":"SD","tmdb":969681,"title":"Spider-Man: Brand New Day","separateSource":true,"durationSeconds":8700,"expectedMinutes":0,"decodedFrames":26,"width":1728,"height":720,"decoded":true,"plausibleRuntime":false,"midpointDecoded":false,"measured4k":false,"status":"runtime_unverified"}
+{"kind":"finished","shard":1,"shards":8}

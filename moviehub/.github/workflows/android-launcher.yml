@@ -1,0 +1,256 @@
+name: Build Android TV launcher APK
+on:
+  push:
+    branches: [main, android-tv-launcher]
+    paths: ['android-tv-launcher/**', '.github/workflows/android-launcher.yml']
+  pull_request:
+    paths: ['android-tv-launcher/**', '.github/workflows/android-launcher.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-launcher-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Install Android SDK packages
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.6.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Format live handoff Java and show any required changes
+        run: |
+          npm install --no-save prettier@3 prettier-plugin-java
+          npx prettier --write android-tv-launcher/app/src/main/java/local/tv/home/{LiveProgress,Troubleshooting,GuidePicture,LiveTvScreen,VlcPlaybackActivity,MainActivity,LiveZapper,PlayerMenus,SkyOverlay,ProviderRelay,PlaylistSession,ProviderBroker,AdapterSources,ProviderPackages}.java android-tv-launcher/app/src/androidTest/java/local/tv/home/{PlaybackTest,LiveControlsTest,PlaylistSessionTest}.java android-tv-launcher/tests/LiveProgressTest.java
+          git diff --exit-code
+      - name: Verify playlist, network, channel search and episode rules
+        run: bash android-tv-launcher/tests/run-core-tests.sh
+      - name: Verify bundled free VOD providers
+        run: |
+          python -m pip install requests==2.32.5 six==1.17.0
+          python android-tv-launcher/tests/test_free_vod.py
+      - name: Build APK and run Android lint
+        run: gradle -p android-tv-launcher --no-daemon assembleDebug assembleRelease lintDebug lintRelease testDebugUnitTest assembleDebugAndroidTest
+      - name: Verify APK signature and checksum
+        run: |
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose android-tv-launcher/app/build/outputs/apk/debug/app-debug.apk
+          sha256sum android-tv-launcher/app/build/outputs/apk/debug/app-debug.apk > android-tv-launcher/app/build/outputs/apk/debug/app-debug.apk.sha256
+      - name: Upload installable debug APK
+        uses: actions/upload-artifact@v6
+        with:
+          name: android-tv-launcher-debug-apk
+          path: |
+            android-tv-launcher/app/build/outputs/apk/debug/app-debug.apk
+            android-tv-launcher/app/build/outputs/apk/debug/app-debug.apk.sha256
+          if-no-files-found: error
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: android-launcher-diagnostics
+          path: android-tv-launcher/app/build/reports/
+          if-no-files-found: ignore
+      - name: Build the separate MovieHub Experimental app
+        run: |
+          gradle -p android-tv-launcher --no-daemon -Pexperimental assembleDebug
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging android-tv-launcher/app/build/outputs/apk/debug/app-debug.apk | head -1 | grep -q "name='local.tv.home.experimental'"
+      - name: Upload installable experimental debug APK
+        uses: actions/upload-artifact@v6
+        with:
+          name: moviehub-experimental-debug-apk
+          path: android-tv-launcher/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+  device-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.6.0'
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Verify real SQLite, encryption, migrations and pagination
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          arch: x86_64
+          profile: tv_1080p
+          disable-animations: true
+          script: bash android-tv-launcher/tests/run-device-tests.sh
+      - name: List failed device tests
+        if: failure()
+        run: python3 android-tv-launcher/tests/report-test-failures.py android-tv-launcher/app/build/outputs/androidTest-results
+      - name: Upload device test reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: android-tv-device-tests
+          path: |
+            android-tv-launcher/app/build/reports/androidTests/
+            android-tv-launcher/app/build/reports/tv-screenshots/
+          if-no-files-found: ignore
+
+  signed-compatibility:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.6.0'
+      - name: Prepare temporary signing configuration
+        env:
+          APK_KEYSTORE_BASE64: ${{ secrets.APK_KEYSTORE_BASE64 }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download android-tv-latest --pattern home.apk --pattern update.json --dir "$RUNNER_TEMP/baseline"
+          python - <<'PY'
+          import base64,json,os,pathlib
+          if not os.environ.get('APK_KEYSTORE_BASE64'): raise SystemExit('Permanent signing key is not configured')
+          key=pathlib.Path(os.environ['RUNNER_TEMP'])/'compatibility-signing.jks'
+          key.write_bytes(base64.b64decode(os.environ['APK_KEYSTORE_BASE64'],validate=True));key.chmod(0o600)
+          baseline=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'baseline/update.json').read_text())
+          with open(os.environ['GITHUB_ENV'],'a') as output:
+              output.write('APK_KEYSTORE='+str(key)+'\n')
+              output.write('APK_VERSION_CODE='+str(baseline['versionCode']+1)+'\nAPK_VERSION_NAME=verification\n')
+          PY
+      - name: Build signed candidate without publishing
+        env:
+          APK_STORE_PASSWORD: ${{ secrets.APK_STORE_PASSWORD }}
+          APK_KEY_ALIAS: ${{ secrets.APK_KEY_ALIAS }}
+          APK_KEY_PASSWORD: ${{ secrets.APK_KEY_PASSWORD }}
+        run: gradle -p android-tv-launcher --no-daemon assembleRelease lintRelease
+      - name: Verify updater package, version, checksum and certificate compatibility
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,pathlib,re,subprocess
+          directory=pathlib.Path(os.environ['RUNNER_TEMP'])/'baseline'
+          baseline=directory/'home.apk';manifest=json.loads((directory/'update.json').read_text())
+          if hashlib.sha256(baseline.read_bytes()).hexdigest()!=manifest['sha256']: raise SystemExit('Published checksum mismatch')
+          candidate=pathlib.Path('android-tv-launcher/app/build/outputs/apk/release/app-release.apk')
+          tools=pathlib.Path(os.environ['ANDROID_HOME'])/'build-tools/35.0.0'
+          def certs(apk):
+              output=subprocess.check_output([str(tools/'apksigner'),'verify','--print-certs',str(apk)],text=True)
+              return set(re.findall(r'Signer #\d+ certificate SHA-256 digest: ([0-9a-f]+)',output))
+          previous,current=certs(baseline),certs(candidate)
+          if not previous or previous!=current: raise SystemExit('Updater would reject signing certificate')
+          badging=subprocess.check_output([str(tools/'aapt'),'dump','badging',str(candidate)],text=True)
+          package=re.search(r"package: name='([^']+)' versionCode='(\d+)'",badging)
+          if not package or package[1]!=manifest['packageName'] or int(package[2])<=manifest['versionCode']: raise SystemExit('Updater would reject package or version')
+          print('Signed candidate matches the existing updater package and certificate, with an increasing version code.')
+          PY
+      - name: Prepare installable signed test APK
+        run: |
+          mkdir -p android-tv-launcher/app/build/outputs/apk/test
+          cp android-tv-launcher/app/build/outputs/apk/release/app-release.apk android-tv-launcher/app/build/outputs/apk/test/moviehub-test.apk
+          sha256sum android-tv-launcher/app/build/outputs/apk/test/moviehub-test.apk > android-tv-launcher/app/build/outputs/apk/test/moviehub-test.apk.sha256
+      - name: Upload installable signed test APK
+        uses: actions/upload-artifact@v6
+        with:
+          name: moviehub-signed-test-apk
+          path: android-tv-launcher/app/build/outputs/apk/test/moviehub-test.apk*
+          if-no-files-found: error
+      - name: Remove temporary signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/compatibility-signing.jks"
+
+  free-vod-live-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source probe dependencies
+        run: python -m pip install requests==2.32.5 six==1.17.0
+      - name: Probe public provider availability without logging stream URLs
+        # External availability is diagnostic, never a substitute for playback fixtures.
+        continue-on-error: true
+        run: timeout 330s python -u android-tv-launcher/tests/probe-free-vod.py
+
+  experimental-device-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.6.0'
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Exercise the real experimental ExoPlayer and screen lifecycle
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          arch: x86_64
+          profile: tv_1080p
+          disable-animations: true
+          script: bash android-tv-launcher/tests/run-experimental-tests.sh
+      - name: List failed experimental tests
+        if: failure()
+        run: python3 android-tv-launcher/tests/report-test-failures.py android-tv-launcher/app/build/outputs/androidTest-results
+      - name: Upload experimental reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: moviehub-experimental-device-tests
+          path: android-tv-launcher/app/build/reports/
+          if-no-files-found: ignore

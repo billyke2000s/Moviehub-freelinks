@@ -1,0 +1,13 @@
+**/.gradle/
+**/build/
+local.properties
+*.jks
+*.keystore
+.env
+release-files/
+*.log
+node_modules/
+provider-engine/dist/
+
+__pycache__/
+*.pyc

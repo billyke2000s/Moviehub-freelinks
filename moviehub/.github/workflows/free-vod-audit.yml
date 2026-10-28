@@ -1,0 +1,76 @@
+name: Free VOD provider audit
+on:
+    push:
+        branches:
+            [
+                fix/free-vod-reliability,
+                fix/experimental-zlive-vod,
+                fix/vod-provider-recovery,
+                fix/site-by-site-vod,
+            ]
+    workflow_dispatch:
+permissions:
+    contents: read
+jobs:
+    audit:
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+        strategy:
+            matrix:
+                media: [movies, series]
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.11"
+            - run: python -m pip install requests==2.32.5 six==1.17.0
+            - name: Compare official Kodi packages and original provider hashes
+              run: python android-tv-launcher/tests/verify-vod-upstream.py
+            - name: Verify every bundled adapter and lookup contract
+              run: python android-tv-launcher/tests/test_free_vod.py
+            - name: Report each website separately for movies and series
+              run: |
+                  args=()
+                  if [ "${{ matrix.media }}" = series ]; then args+=(--series); fi
+                  python android-tv-launcher/tests/probe-free-vod.py --include-retired "${args[@]}" | tee provider-audit.jsonl
+            - name: Check a recent film with the repaired and previously productive scrapers
+              if: matrix.media == 'movies'
+              run: |
+                  python android-tv-launcher/tests/probe-free-vod.py \
+                    --provider free99:levidia_ch --provider free99:fzmovies_live \
+                    --provider free99:anymovies_co \
+                    --provider scrubs:watchtvseries_net --provider scrubs:tvids_net \
+                    --provider scrubs:tvseries_video --provider scrubs:m4uhd_tv \
+                    --provider scrubs:iwaatch_com --provider scrubs:pressplay_top \
+                    --provider free99:seriesloaded_ng --provider scrubs:moviesnipipay_me \
+                    --provider scrubs:tvmovieflix_com --provider scrubs:watchseries_cyou \
+                    --provider scrubs:projectfreetv_cyou \
+                    --movie "Inception" 2010 tt1375666 27205 | tee focused-movie-audit.jsonl
+            - name: Check the exact film from the reported TV failure
+              if: matrix.media == 'movies'
+              run: |
+                  python android-tv-launcher/tests/probe-free-vod.py \
+                    --provider free99:levidia_ch --provider free99:fzmovies_live \
+                    --provider free99:anymovies_co --provider free99:seriesloaded_ng \
+                    --provider scrubs:iwaatch_com --provider scrubs:m4uhd_tv \
+                    --provider scrubs:watchtvseries_net --provider scrubs:tvids_net \
+                    --provider scrubs:pressplay_top \
+                    --movie "Spider-Man: Brand New Day" 2026 tt22084616 969681 | tee reported-movie-audit.jsonl
+            - name: Probe Tubi with a currently listed film
+              if: matrix.media == 'movies'
+              run: |
+                  python android-tv-launcher/tests/probe-free-vod.py --provider scrubs:tubitv_com \
+                    --movie "Bikini Spring Break" 2012 tt2304517 0 | tee tubi-movie-audit.jsonl
+            - name: Compare HTTP identity on challenge-blocked reachable websites
+              if: matrix.media == 'movies'
+              run: python android-tv-launcher/tests/probe-vod-http.py | tee http-identity-audit.jsonl
+            - uses: actions/upload-artifact@v6
+              if: always()
+              with:
+                  name: free-vod-provider-audit-${{ matrix.media }}
+                  path: |
+                      provider-audit.jsonl
+                      focused-movie-audit.jsonl
+                      http-identity-audit.jsonl
+                      tubi-movie-audit.jsonl
+                      reported-movie-audit.jsonl

@@ -1,0 +1,80 @@
+name: Standalone provider engine
+on:
+    pull_request:
+        paths: ["provider-engine/**", "android-tv-launcher/**", ".github/workflows/provider-engine.yml"]
+    workflow_dispatch:
+    schedule:
+        - cron: "31 */12 * * *"
+permissions:
+    contents: read
+concurrency:
+    group: provider-engine-${{ github.ref }}
+    cancel-in-progress: true
+jobs:
+    verify:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+                  cache: npm
+                  cache-dependency-path: provider-engine/package-lock.json
+            - uses: actions/setup-java@v5
+              with:
+                  distribution: temurin
+                  java-version: "17"
+            - run: npm ci --ignore-scripts --prefix provider-engine
+            - run: npm run build --prefix provider-engine && npm test --prefix provider-engine
+            - name: Verify bundled package is reproducible
+              run: git diff --exit-code -- android-tv-launcher/app/src/main/assets/providers/builtin.json
+            - name: Fetch pinned JavaScript interpreter
+              run: curl --fail --location --output "$RUNNER_TEMP/rhino.jar" https://repo.maven.apache.org/maven2/org/mozilla/rhino/1.9.1/rhino-1.9.1.jar
+            - name: Verify interpreter checksum
+              run: echo "12dbb224cea124a5d32968722e8eb161c967bf15f3c9a795d1b05592b1147975  $RUNNER_TEMP/rhino.jar" | sha256sum --check
+            - name: Test actual interpreter, deadlines, Java denial and package signatures
+              run: RHINO_JAR="$RUNNER_TEMP/rhino.jar" bash provider-engine/tools/verify.sh
+    update:
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.PROVIDER_UPDATES_ENABLED == 'true'
+        needs: verify
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+            - uses: actions/setup-java@v5
+              with:
+                  distribution: temurin
+                  java-version: "17"
+            - name: Retrieve current pinned upstream module
+              env:
+                  GH_TOKEN: ${{ secrets.MASQUERADARR_READ_TOKEN || github.token }}
+              run: node provider-engine/tools/sync-upstream.mjs
+            - run: npm ci --ignore-scripts --prefix provider-engine
+            - name: Compile without executing upstream code on the runner
+              env:
+                  PROVIDER_VERSION: ${{ github.run_number }}
+              run: PROVIDER_VERSION=$((PROVIDER_VERSION + 1000000)) npm run build --prefix provider-engine
+            - run: curl --fail --location --output "$RUNNER_TEMP/rhino.jar" https://repo.maven.apache.org/maven2/org/mozilla/rhino/1.9.1/rhino-1.9.1.jar
+            - name: Verify interpreter checksum
+              run: echo "12dbb224cea124a5d32968722e8eb161c967bf15f3c9a795d1b05592b1147975  $RUNNER_TEMP/rhino.jar" | sha256sum --check
+            - name: Validate in capability-restricted interpreter
+              run: RHINO_JAR="$RUNNER_TEMP/rhino.jar" bash provider-engine/tools/verify.sh
+            - name: Sign exact validated bytes using the pinned trust key
+              env:
+                  PROVIDER_SIGNING_KEY_B64: ${{ secrets.PROVIDER_SIGNING_KEY_B64 }}
+              run: node provider-engine/tools/sign.mjs
+            - name: Publish provider package only (never an APK)
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  gh release create "provider-engine-${GITHUB_RUN_NUMBER}" --latest=false provider-engine/dist/providers.json provider-engine/dist/providers.sig --title "Provider engine ${GITHUB_RUN_NUMBER}" --notes "Validated standalone provider transform package. No APK."
+                  if ! gh release view provider-engine-latest >/dev/null 2>&1; then
+                    gh release create provider-engine-latest --latest=false --title 'Latest provider engine package' --notes 'Signed runtime-compatible provider transforms. No APK.'
+                  fi
+                  gh release upload provider-engine-latest provider-engine/dist/providers.json provider-engine/dist/providers.sig --clobber
