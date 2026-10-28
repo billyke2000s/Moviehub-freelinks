@@ -2,10 +2,11 @@
 
 ## MovieHub app source for the rewrite
 
-The complete rolled-back MovieHub project is now in [`moviehub/`](moviehub/), copied
+The MovieHub rewrite project is in [`moviehub/`](moviehub/), copied
 without source changes from
 [`billyke2000s/moviehub@fae35002a60879b213011c85322329c2bc3728cc`](https://github.com/billyke2000s/moviehub/commit/fae35002a60879b213011c85322329c2bc3728cc).
-This is the 1.0.12 code restored by the 1.0.16 rollback, before any chipset-packaging changes.
+That import is the 1.0.12 code restored by the 1.0.16 rollback. Subsequent ARM64/backend
+optimization work is documented in [moviehub/STATUS.md](moviehub/STATUS.md).
 
 - App code and build project: [`moviehub/android-tv-launcher/`](moviehub/android-tv-launcher/).
 - Provider compiler and upstream source: [`moviehub/provider-engine/`](moviehub/provider-engine/).

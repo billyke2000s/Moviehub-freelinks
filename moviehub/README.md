@@ -1,5 +1,17 @@
 <div align="center">
 
+## FreeLinks optimization build — ARM64
+
+This copy now targets `arm64-v8a` for the owner's S905X5M box. Release APKs no longer bundle
+ARM32 or Intel libraries. The pinned NDK strips native debug sections; CI inspects the built APK
+rather than estimating its contents. Android firmware must support 64-bit apps; hardware-only
+identification does not prove installation compatibility. This copy is not a published update.
+
+The existing interface, source URLs, provider adapters, players, accounts and resume keys are
+preserved. Public TMDB replies share a bounded one-minute in-memory cache, and artwork caches
+release memory under pressure. Debug emulator checks use `-PmoviehubAbi=x86_64`; ordinary builds
+default to ARM64. See [TESTING.md](TESTING.md) for verification and remaining device checks.
+
 # MOVIEHUB
 
 ### Films, series and live TV in one place.

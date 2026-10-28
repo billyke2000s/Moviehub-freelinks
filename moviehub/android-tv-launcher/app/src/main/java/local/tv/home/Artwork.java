@@ -28,7 +28,7 @@ final class Artwork {
     static final int PARALLEL = 4;
     /** Artwork kept on disk between sessions; set once by the activity. */
     static volatile ArtworkDiskCache disk;
-    private final ExecutorService downloads = Executors.newFixedThreadPool(PARALLEL);
+    private final ThreadPoolExecutor downloads = (ThreadPoolExecutor) Executors.newFixedThreadPool(PARALLEL);
     private final Handler main = new Handler(Looper.getMainLooper());
     private final WeakHashMap<ImageView, Binding> bindings = new WeakHashMap<>();
     private final LinkedHashSet<String> pending = new LinkedHashSet<>();
@@ -43,6 +43,8 @@ final class Artwork {
 
     Artwork(Fetcher fetcher) {
         this.fetcher = fetcher;
+        downloads.setKeepAliveTime(30, TimeUnit.SECONDS);
+        downloads.allowCoreThreadTimeOut(true);
     }
 
     private final class Binding implements View.OnAttachStateChangeListener {
@@ -186,5 +188,10 @@ final class Artwork {
         pending.clear();
         running.clear();
         failures.clear();
+    }
+
+    static void trimMemory(boolean critical) {
+        if (critical) CACHE.evictAll();
+        else CACHE.trimToSize(CACHE.maxSize() / 2);
     }
 }

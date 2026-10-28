@@ -1,5 +1,30 @@
 # Testing
 
+## FreeLinks optimization checks
+
+The root `Verify copied MovieHub project` workflow now builds/lints ARM64 debug and release APKs,
+checks their actual release native architecture and absence of debug sections, and runs the full
+existing Android TV fixture suite using a separately built x86_64 debug APK. It does not publish
+an app or use the original repository's signing secrets. The copied nested workflows remain inert.
+
+`CatalogueCacheTest` exercises expiry, LRU and byte eviction, concurrent request coalescing,
+unrelated-key independence, failed-fetch retry and memory trimming during an in-flight fetch.
+ArtworkDiskCacheTest additionally checks corrupt oversized entries and existing filename
+compatibility. Existing provider Python/Node tests and Java core checks remain required.
+
+Commands from this `moviehub/` directory:
+
+```sh
+bash android-tv-launcher/tests/run-core-tests.sh
+gradle -p android-tv-launcher assembleDebug assembleRelease lintDebug
+python3 android-tv-launcher/tests/inspect-apk.py android-tv-launcher/app/build/outputs/apk/release/app-release-unsigned.apk
+ORG_GRADLE_PROJECT_moviehubAbi=x86_64 bash android-tv-launcher/tests/run-device-tests.sh
+```
+
+A single shared HTTP load in the concurrency fixture proves request elimination, not a physical
+box speedup. ARM64 installation, sustained playback, memory and startup timings on the owner's
+S905X5M remain device checks. No universal performance claim follows from fixture success.
+
 ## Continuous series and automatic playback
 
 `VideoFilesTest` includes episode ordering, future-date handling and source-resolution ranking. `SeriesAutoplayTest` uses catalogue and source fixtures to check season transitions, updated history keys, missing pack episodes, show endings, uncertain filenames, bounded source fallback and cancellation. `LiveGuideTest` covers colour keys from header focus and Back/arrow/OK controls; `LiveControlsTest` covers all four physical colours during playback, learned scan-code colours, and OK/click/◀ always showing the same banner. These do not verify a particular physical remote or real-provider playback.

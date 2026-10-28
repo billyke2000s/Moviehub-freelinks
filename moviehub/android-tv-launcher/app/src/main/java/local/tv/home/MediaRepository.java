@@ -6,6 +6,7 @@ import org.json.*;
 final class MediaRepository {
 
     final Secrets secrets;
+    private final CatalogueCache catalogue = new CatalogueCache();
 
     MediaRepository(Secrets secrets) {
         this.secrets = secrets;
@@ -120,13 +121,20 @@ final class MediaRepository {
     JSONObject tmdb(String path) throws Exception {
         String key = secrets.get("tmdb");
         if (key.isEmpty()) throw new Exception("Connect TMDB first");
-        long started = Timings.start();
-        String body = Network.text(
-            tmdbUrl(path + (path.contains("?") ? "&" : "?") + "language=en-US", key),
-            null,
-            false
-        );
-        Timings.record("TMDB request", started);
+        String request = tmdbUrl(path + (path.contains("?") ? "&" : "?") + "language=en-US", key);
+        String body = catalogue.get(request, () -> {
+            long started = Timings.start();
+            String response = Network.text(request, null, false);
+            // Parse before caching: a malformed response must not make repeated visits fail.
+            new JSONObject(response);
+            Timings.record("TMDB request", started);
+            return response;
+        });
+        // Callers receive independent objects: episode/detail decoration must not mutate the cache.
         return new JSONObject(body);
+    }
+
+    void trimMemory() {
+        catalogue.clear();
     }
 }

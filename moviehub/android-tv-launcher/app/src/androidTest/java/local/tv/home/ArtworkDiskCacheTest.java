@@ -55,4 +55,30 @@ public class ArtworkDiskCacheTest {
         cache.put("https://image.example/huge.jpg", new byte[2000]);
         return cache.get("https://image.example/huge.jpg");
     }
+
+    @Test
+    public void rejectsOversizedExistingFileWithoutAllocatingItsContents() throws Exception {
+        ArtworkDiskCache cache = new ArtworkDiskCache(folder, ArtworkDiskCache.MAX_BYTES);
+        cache.put("https://image.example/corrupt.jpg", new byte[8]);
+        File[] files = folder.listFiles();
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        try (java.io.RandomAccessFile file = new java.io.RandomAccessFile(files[0], "rw")) {
+            file.setLength(ArtworkDiskCache.MAX_IMAGE_BYTES + 1L);
+        }
+        assertNull(cache.get("https://image.example/corrupt.jpg"));
+        assertFalse("Oversized cache entry removed", files[0].exists());
+    }
+
+    @Test
+    public void cacheFilenameRemainsCompatibleWithExistingDownloads() throws Exception {
+        String url = "https://image.example/existing.jpg";
+        byte[] digest = java.security.MessageDigest.getInstance("SHA-256").digest(url.getBytes("UTF-8"));
+        StringBuilder oldName = new StringBuilder();
+        for (int i = 0; i < 16; i++) oldName.append(String.format("%02x", digest[i]));
+        folder.mkdirs();
+        java.nio.file.Files.write(new File(folder, oldName.toString()).toPath(), new byte[] { 1, 2, 3 });
+        ArtworkDiskCache cache = new ArtworkDiskCache(folder, ArtworkDiskCache.MAX_BYTES);
+        assertArrayEquals(new byte[] { 1, 2, 3 }, cache.get(url));
+    }
 }

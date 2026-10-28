@@ -1,5 +1,12 @@
 # AI / New Chat Handoff
 
+## ARM64 optimization work
+
+The owner subsequently requested an S905X5M-targeted optimization of the copied app.
+The original imported tree remains the baseline below; current app changes are documented
+in moviehub/STATUS.md and tested by the root Android/offline verification workflow.
+No source/provider or interface replacement is implied by the baseline import.
+
 ## App rewrite baseline — 28 October 2026
 
 The owner requested the whole MovieHub codebase here to start a rewrite. The exact tracked source

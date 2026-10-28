@@ -45,3 +45,94 @@ jobs:
         run: python -B -m unittest discover -s android-tv-launcher/tests -p 'test_*.py'
       - name: Run existing provider-engine tests
         run: node --test provider-engine/tests/*.test.mjs
+
+  android-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: moviehub
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.6.0'
+      - name: Install pinned Android tools
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'build-tools;36.0.0' 'ndk;27.2.12479018'
+      - name: Build ARM64 debug and release APKs and run lint
+        run: gradle -p android-tv-launcher --no-daemon assembleDebug assembleRelease lintDebug
+      - name: Inspect actual release native libraries
+        run: |
+          python android-tv-launcher/tests/inspect-apk.py \
+            android-tv-launcher/app/build/outputs/apk/release/app-release-unsigned.apk \
+            | tee android-tv-launcher/app/build/apk-inspection.txt
+      - name: Keep build and size evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: moviehub-arm64-build
+          path: |
+            moviehub/android-tv-launcher/app/build/outputs/apk/debug/*.apk
+            moviehub/android-tv-launcher/app/build/outputs/apk/release/*.apk
+            moviehub/android-tv-launcher/app/build/apk-inspection.txt
+            moviehub/android-tv-launcher/app/build/reports/lint-results-debug.*
+          if-no-files-found: ignore
+
+  android-device-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.6.0'
+      - name: Install pinned Android tools
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'build-tools;36.0.0' 'ndk;27.2.12479018'
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run existing Android TV regression suite
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ORG_GRADLE_PROJECT_moviehubAbi: x86_64
+        with:
+          api-level: 28
+          arch: x86_64
+          profile: tv_1080p
+          disable-animations: true
+          script: cd moviehub && bash android-tv-launcher/tests/run-device-tests.sh
+      - name: List failed device tests
+        if: failure()
+        run: python3 moviehub/android-tv-launcher/tests/report-test-failures.py moviehub/android-tv-launcher/app/build/outputs/androidTest-results
+      - name: Keep device evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: moviehub-device-tests
+          path: |
+            moviehub/android-tv-launcher/app/build/reports/
+            moviehub/android-tv-launcher/app/build/device-tests.log
+            moviehub/android-tv-launcher/app/build/device-crash.log
+          if-no-files-found: ignore

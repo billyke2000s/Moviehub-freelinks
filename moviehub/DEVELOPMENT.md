@@ -17,6 +17,9 @@ tried on the TV beside the real app. Those builds are published by `publish-expe
 
 ## Build
 
+Normal APKs target ARM64 only. Use `-PmoviehubAbi=x86_64` only for emulator builds.
+The pinned NDK (`27.2.12479018`) is needed to strip native debug sections.
+
 ```sh
 gradle -p android-tv-launcher assembleDebug lintDebug
 ```
