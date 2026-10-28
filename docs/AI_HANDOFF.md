@@ -1,5 +1,28 @@
 # AI / New Chat Handoff
 
+## App rewrite baseline — 28 October 2026
+
+The owner requested the whole MovieHub codebase here to start a rewrite. The exact tracked source
+tree from `billyke2000s/moviehub` commit `fae35002a60879b213011c85322329c2bc3728cc` is in
+`moviehub/`. It contains the 1.0.12 code restored by the 1.0.16 rollback, with all original project
+documentation, tests, build files, provider sources and license notices. No application code was
+changed during the copy. Chipset-packaging changes were paused and are not included.
+
+Work on the app copy inside this repository for the rewrite; keep the original MovieHub repository
+unchanged unless separately instructed. Read `moviehub/AGENTS.md` before app work. Existing root
+playlist tooling and outputs remain intact. Package identity, update URLs and release setup in the
+copied project still refer to the original app, so this copy has not established a separate release
+channel. Nested workflows are inert source copies. Root `verify-moviehub-copy.yml` runs existing
+offline checks without publishing an APK or modifying the original repo.
+
+The older converter-only boundaries and architecture notes below describe the original FreeLinks
+project. They do not forbid the owner's newly authorized work on this app copy.
+
+Copy verification: all 814 copied tracked files produce Git tree
+`bfb646212811139a66e6672d1cbabf03e9dc7f94`, identical to the source commit. Existing Java core checks,
+100 app Python fixture tests, three provider-engine Node tests and 15 FreeLinks converter tests
+passed locally. Android APK/lint/device checks were not rerun for this unchanged source copy.
+
 ## User intent
 Continue the existing **MovieHub-FreeLinks** repo, which contains source conversion/discovery outside the main MovieHub Android TV repository. The long-term goal covers **Live TV, Movies, and Series**, but only Live TV adapters exist so far. Do not restart or replace existing working code.
 

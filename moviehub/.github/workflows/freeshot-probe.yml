@@ -1,0 +1,94 @@
+name: FreeShot source investigation
+on:
+  push:
+    branches: [feature/standalone-provider-engine]
+    paths: ['.github/workflows/freeshot-probe.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install stream decoder
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Inspect public catalogue and player structure without uploading pages or session links
+        shell: bash
+        run: |
+          node --input-type=module <<'JS'
+          import {spawnSync} from 'node:child_process';
+          // Fixed public pages only. Never log media URLs, query strings, cookies or inline code.
+          const ua = 'Mozilla/5.0 (Linux; Android 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36';
+          const pages = [
+            'https://www.freeshot.live/',
+            'https://www.freeshot.live/live-tv/united-kingdom',
+            'https://www.freeshot.live/live-tv/sky-sports-action-uk/21',
+            'https://www.freeshot.live/live-tv/sky-sports-main-event-live-uk/15',
+            'https://freeshot.live/embed/SkySportAction.php',
+            'https://wideiptv.top/player/skysportsaction'
+          ];
+          for (const page of pages) {
+            try {
+              const response = await fetch(page, {signal: AbortSignal.timeout(20000), headers: {'User-Agent':ua}});
+              const reader = response.body.getReader();
+              const chunks = [];
+              let size = 0;
+              while (true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                size += value.length;
+                if (size > 1048576) { await reader.cancel(); throw new Error('PageLimit'); }
+                chunks.push(Buffer.from(value));
+              }
+              const html = Buffer.concat(chunks).toString('utf8');
+              for (const frame of html.matchAll(/<iframe[^>]+src=["']([^"']+)["']/gi)) {
+                try {
+                  const next = new URL(frame[1], page);
+                  if (next.protocol === 'https:' &&
+                      (((next.hostname === 'freeshot.live' || next.hostname === 'www.freeshot.live') && /^\/embed\/[A-Za-z0-9_-]+\.php$/.test(next.pathname)) ||
+                       (next.hostname === 'wideiptv.top' && /^\/player\/[A-Za-z0-9_-]+$/.test(next.pathname))) &&
+                      !pages.includes(next.href) && pages.length < 10) pages.push(next.href);
+                } catch {}
+              }
+              const refs = (pattern) => [...html.matchAll(pattern)].slice(0, 20).map(m => {
+                try {
+                  const url = new URL(m[1], page);
+                  return {host: url.hostname, path: url.pathname, query: !!url.search, protocol: url.protocol};
+                } catch { return {invalid: true}; }
+              });
+              if (new URL(page).hostname === 'wideiptv.top') {
+                const match = /streamUrl:\s*("(?:\\.|[^"\\])*")/.exec(html);
+                if (match) {
+                  const stream = JSON.parse(match[1]);
+                  const media = await fetch(stream, {signal: AbortSignal.timeout(20000), headers: {Origin: 'https://wideiptv.top', Referer: 'https://wideiptv.top/', 'User-Agent':ua}});
+                  const manifest = await media.text();
+                  console.log(JSON.stringify({stage: 'manifest', status: media.status, hls: manifest.startsWith('#EXTM3U'), master: manifest.includes('#EXT-X-STREAM-INF'), segments: (manifest.match(/#EXTINF/g) || []).length, challenge: media.headers.get('cf-mitigated') === 'challenge', errorTerms: [...new Set((manifest.match(/expired|invalid|token|forbidden|denied|country|region|referer|cloudflare|access|signature/gi)||[]).map(x=>x.toLowerCase()))].slice(0,12)}));
+                  const decode = spawnSync('ffmpeg', ['-v', 'error', '-rw_timeout', '20000000', '-user_agent', ua, '-headers', 'Origin: https://wideiptv.top\r\nReferer: https://wideiptv.top/\r\n', '-i', stream, '-t', '30', '-map', '0:v:0', '-map', '0:a:0', '-f', 'framemd5', 'pipe:1'], {encoding:'utf8', timeout:90000, maxBuffer:8*1024*1024});
+                  const counts = [0,0];
+                  for (const line of (decode.stdout || '').split('\n')) {
+                    const frame = /^([01]),/.exec(line);
+                    if (frame) counts[Number(frame[1])]++;
+                  }
+                  console.log(JSON.stringify({stage:'decode', exit:decode.status, timedOut:!!decode.error, videoFrames:counts[0], audioFrames:counts[1]}));
+                }
+              }
+              console.log(JSON.stringify({
+                page: new URL(page).pathname, status: response.status, bytes: size,
+                unavailable: /Site Unavailable|Unable to access this site/i.test(html),
+                channelLinks: [...html.matchAll(/href=["'][^"']*\/live-tv\/[^"']+\/\d+["']/gi)].length,
+                iframes: refs(/<iframe[^>]+src=["']([^"']+)["']/gi),
+                scripts: refs(/<script[^>]+src=["']([^"']+)["']/gi),
+                players: ['jwplayer','Hls','videojs','Clappr','Shaka'].filter(name => html.includes(name)),
+                mediaReferences: (html.match(/\.m3u8|\.mpd/gi) || []).length,
+                mediaTags: refs(/<(?:source|video)[^>]+src=["']([^"']+)["']/gi),
+                configKeys: [...new Set([...html.matchAll(/\b([A-Za-z_$][A-Za-z0-9_$]{0,40})\s*[:=]\s*["'][^"'\n]*\.m3u8/g)].map(m => m[1]))]
+              }));
+            } catch (error) {
+              console.log(JSON.stringify({page: new URL(page).pathname, error: error.name}));
+            }
+          }
+          JS

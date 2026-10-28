@@ -1,0 +1,58 @@
+plugins { id 'com.android.application'; id 'com.chaquo.python' }
+// Every build has the same features (ExoPlayer Live TV, the fast provider process).
+// `gradle -Pexperimental ...` only changes the app's identity, to "MovieHub Experimental": its own
+// package, data, launcher role and update feed, so a test build installs beside normal MovieHub.
+// Normal builds: package local.tv.home, label MovieHub, home-screen role, android-tv-latest feed.
+def experimental = project.hasProperty('experimental')
+android {
+    namespace 'local.tv.home'
+    compileSdk 35
+    defaultConfig { applicationId 'local.tv.home'; minSdk 28; targetSdk 35; versionCode Integer.parseInt(System.getenv('APK_VERSION_CODE') ?: '2'); versionName System.getenv('APK_VERSION_NAME') ?: '0.2' }
+    defaultConfig { ndk { abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64', 'x86' } }
+    defaultConfig { testInstrumentationRunner 'local.tv.home.MovieHubTestRunner' }
+    defaultConfig {
+        if (experimental) applicationId 'local.tv.home.experimental'
+        manifestPlaceholders = [
+            appLabel: experimental ? 'MovieHub Experimental' : 'MovieHub',
+            homeCategory: experimental ? 'android.intent.category.DEFAULT' : 'android.intent.category.HOME'
+        ]
+        buildConfigField 'boolean', 'EXPERIMENTAL', experimental ? 'true' : 'false'
+    }
+    buildFeatures { buildConfig true }
+    signingConfigs {
+        release {
+            if (System.getenv('APK_KEYSTORE')) {
+                storeFile file(System.getenv('APK_KEYSTORE'))
+                storePassword System.getenv('APK_STORE_PASSWORD')
+                keyAlias System.getenv('APK_KEY_ALIAS')
+                keyPassword System.getenv('APK_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes { release { if (System.getenv('APK_KEYSTORE')) signingConfig signingConfigs.release } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+dependencies {
+    // Live TV engine.
+    implementation 'androidx.media3:media3-exoplayer:1.5.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.5.1'
+    // DASH (.mpd) channels: without it ExoPlayer cannot load DashMediaSource and the app crashes.
+    implementation 'androidx.media3:media3-exoplayer-dash:1.5.1'
+    implementation 'androidx.media3:media3-ui:1.5.1'
+    implementation 'org.mozilla:rhino:1.9.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    implementation 'org.videolan.android:libvlc-all:3.7.0'
+    implementation 'androidx.work:work-runtime:2.12.0'
+}
+
+chaquopy {
+    defaultConfig {
+        version = '3.11'
+        pip {
+            install 'requests==2.32.5'
+            install 'six==1.17.0'
+        }
+    }
+}

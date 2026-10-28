@@ -1,5 +1,26 @@
 # MovieHub FreeLinks
 
+## MovieHub app source for the rewrite
+
+The complete rolled-back MovieHub project is now in [`moviehub/`](moviehub/), copied
+without source changes from
+[`billyke2000s/moviehub@fae35002a60879b213011c85322329c2bc3728cc`](https://github.com/billyke2000s/moviehub/commit/fae35002a60879b213011c85322329c2bc3728cc).
+This is the 1.0.12 code restored by the 1.0.16 rollback, before any chipset-packaging changes.
+
+- App code and build project: [`moviehub/android-tv-launcher/`](moviehub/android-tv-launcher/).
+- Provider compiler and upstream source: [`moviehub/provider-engine/`](moviehub/provider-engine/).
+- Start with [`moviehub/AGENTS.md`](moviehub/AGENTS.md),
+  [`moviehub/ARCHITECTURE.md`](moviehub/ARCHITECTURE.md) and
+  [`moviehub/DEVELOPMENT.md`](moviehub/DEVELOPMENT.md).
+- Run app commands from `moviehub/`, for example
+  `gradle -p android-tv-launcher assembleDebug lintDebug`.
+
+The existing FreeLinks scripts, playlists and outputs below remain in place. The app copy is a
+rewrite starting point, not a separately published app: its package identity and updater URLs still
+match the original project. No APK or signing secrets were copied. Its workflows are preserved
+under `moviehub/.github/workflows/` as source files; GitHub does not run nested workflows.
+The root **Verify copied MovieHub project** workflow runs the existing offline app checks.
+
 **External source discovery, conversion and publishing for [MovieHub Android TV](https://github.com/billyke2000s/moviehub).**
 
 > **START HERE — NEW CHAT / AI HANDOFF:** Read this README and [docs/AI_HANDOFF.md](docs/AI_HANDOFF.md) before editing. Inspect the existing code and workflows. Continue the project; do not rewrite working adapters or change the Android app without explicit permission.

@@ -1,0 +1,54 @@
+name: Individual VOD decoding and runtime audit
+on:
+    push:
+        branches: [feat/verified-movie-sources]
+        paths:
+            - "android-tv-launcher/app/src/main/**"
+            - "android-tv-launcher/app/src/androidTest/**"
+            - "android-tv-launcher/tests/run-live-vod-audit.sh"
+    workflow_dispatch:
+permissions:
+    contents: read
+jobs:
+    decode:
+        runs-on: ubuntu-latest
+        timeout-minutes: 45
+        strategy:
+            fail-fast: false
+            matrix:
+                shard: [0]
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions/setup-java@v5
+              with:
+                  distribution: temurin
+                  java-version: "17"
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.11"
+            - uses: android-actions/setup-android@v4
+              with:
+                  packages: "platform-tools"
+            - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'build-tools;36.0.0'
+            - uses: gradle/actions/setup-gradle@v5
+              with:
+                  gradle-version: "9.6.0"
+            - name: Enable emulator acceleration
+              run: |
+                  echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+                  sudo udevadm control --reload-rules
+                  sudo udevadm trigger --name-match=kvm
+            - name: Decode individual sources through the packaged Android player
+              uses: reactivecircus/android-emulator-runner@v2
+              with:
+                  api-level: 28
+                  arch: x86_64
+                  profile: tv_1080p
+                  disable-animations: true
+                  script: bash android-tv-launcher/tests/run-live-vod-audit.sh 0 1 native:fourkhdhub,native:vixsrc,scrubs:rarefilmm_com,free99:levidia_ch
+            - uses: actions/upload-artifact@v6
+              if: always()
+              with:
+                  name: vod-decoded-audit-${{ matrix.shard }}
+                  path: vod-live-audit.jsonl
+                  if-no-files-found: warn

@@ -1,0 +1,14 @@
+Standalone provider engine third-party notices
+
+Historical provider modules (FreeLiveSports, STIRR, TCL, Xumo, LG, Whale, Distro, Vizio,
+Vidaa, Roku, Plex, DaddyLive, Tubi, Samsung, Local Now and ZLive) and the Java TS-prefix port:
+Masqueradarr, Copyright (c) 2025-2026 BinaryNinja, MIT.
+Complete notice: LICENSE.masqueradarr.txt (alongside this file).
+Historical source: https://github.com/TheBinaryNinja/masqueradarr/tree/3b860294ecb4a9ebca8819adfc061162fbbb7f99
+
+Rhino 1.9.1: Mozilla Public License 2.0.
+Source and licence: https://github.com/mozilla/rhino
+https://www.mozilla.org/MPL/2.0/
+MovieHub uses the unmodified Maven Rhino library in interpreter mode.
+
+TypeScript 5.7.2 is a build-time compiler (Apache License 2.0), not a bundled Android runtime.

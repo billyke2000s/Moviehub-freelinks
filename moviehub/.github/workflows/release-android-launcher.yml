@@ -1,0 +1,48 @@
+name: Make a GitHub release of the published update
+# Copies the signed update the TVs already have (the android-tv-latest feed) into a numbered
+# release, "MovieHub <version>", marked as the latest release on the repository page. It never
+# builds or signs anything and never changes the update feed.
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: 'Release notes (Markdown). Empty uses the update notes from the feed.'
+        required: false
+        default: ''
+permissions:
+  contents: write
+concurrency:
+  group: publish-android-launcher
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Copy the published update into a numbered release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          set -euo pipefail
+          mkdir files
+          gh release download android-tv-latest --pattern home.apk --pattern update.json --dir files
+          version=$(python3 -c "import json;print(json.load(open('files/update.json'))['versionName'])")
+          expected=$(python3 -c "import json;print(json.load(open('files/update.json'))['sha256'])")
+          actual=$(sha256sum files/home.apk | cut -d' ' -f1)
+          test "$expected" = "$actual"
+          header='**MovieHub hosts no content.** It is software only: free channels come from the public Free-TV and iptv-org lists and everything else from services you add. You are responsible for what you watch. See the README.'
+          install='Download **home.apk** below and install it on an Android TV box (Android 9 or newer). Boxes that already run MovieHub update themselves: press **Update** beside Settings.'
+          if [ -n "$NOTES" ]; then body="$NOTES"; else
+            body=$(python3 -c "import json;print(json.load(open('files/update.json')).get('notes',''))")
+          fi
+          printf '%s\n\n## Install\n%s\n\n## What is new\n%s\n' "$header" "$install" "$body" > notes.md
+          if gh release view "moviehub-v$version" >/dev/null 2>&1; then
+            gh release upload "moviehub-v$version" files/home.apk files/update.json --clobber
+            gh release edit "moviehub-v$version" --notes-file notes.md --latest
+          else
+            gh release create "moviehub-v$version" files/home.apk files/update.json --target "$GITHUB_SHA" \
+              --title "MovieHub $version" --notes-file notes.md --latest
+          fi
+          gh release edit android-tv-latest --title "MovieHub $version — updater feed" --latest=false

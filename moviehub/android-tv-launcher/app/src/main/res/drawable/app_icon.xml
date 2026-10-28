@@ -1,0 +1,10 @@
+<!-- MovieHub app icon: a house outline (home screen) with a play button inside. Original artwork. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp" android:viewportWidth="96" android:viewportHeight="96">
+    <path android:fillColor="#121A2B"
+        android:pathData="M18,0 H78 A18,18 0 0 1 96,18 V78 A18,18 0 0 1 78,96 H18 A18,18 0 0 1 0,78 V18 A18,18 0 0 1 18,0 Z"/>
+    <path android:strokeColor="#F2F4F8" android:strokeWidth="6" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:fillColor="#00000000"
+        android:pathData="M18,46 L48,20 L78,46 M27,40 V74 H69 V40"/>
+    <path android:fillColor="#8A9EFF" android:pathData="M41,46 L41,68 L60,57 Z"/>
+</vector>

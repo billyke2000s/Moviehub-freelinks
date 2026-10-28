@@ -1,0 +1,62 @@
+name: Live provider probe
+# Diagnostic only: runs the bundled providers against the real services with the app's own rules
+# and limits, and tries to decode a few streams. Results depend on the providers and the runner's
+# country, so this never runs on pull requests or blocks a build. Re-run it from the Actions tab.
+on:
+    push:
+        branches: [feature/standalone-provider-engine]
+        paths: ['provider-engine/tools/live-probe*.mjs', '.github/workflows/provider-live-probe.yml']
+    workflow_dispatch:
+        inputs:
+            providers:
+                description: "Provider ids to probe, separated by spaces (empty probes all)"
+                required: false
+                default: ""
+permissions:
+    contents: read
+jobs:
+    probe:
+        runs-on: ubuntu-latest
+        timeout-minutes: 40
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions/setup-node@v5
+              with:
+                  node-version: "22"
+            - uses: actions/setup-java@v5
+              with:
+                  distribution: temurin
+                  java-version: "17"
+            - name: Install ffmpeg
+              run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+            - name: Fetch pinned JavaScript interpreter
+              run: curl --fail --location --output "$RUNNER_TEMP/rhino.jar" https://repo.maven.apache.org/maven2/org/mozilla/rhino/1.9.1/rhino-1.9.1.jar
+            - name: Verify interpreter checksum
+              run: echo "12dbb224cea124a5d32968722e8eb161c967bf15f3c9a795d1b05592b1147975  $RUNNER_TEMP/rhino.jar" | sha256sum --check
+            - name: Compile the app's interpreter
+              run: |
+                  mkdir -p build/provider-tests
+                  javac -cp "$RUNNER_TEMP/rhino.jar" -d build/provider-tests android-tv-launcher/app/src/main/java/local/tv/home/{ProviderScript,ProviderCodec,ProviderSignature,ProviderUrls,ProviderSegments}.java android-tv-launcher/tests/ProviderProbeCli.java
+            - name: Probe providers
+              env:
+                  PROVIDERS: ${{ inputs.providers }}
+              # Word splitting of PROVIDERS is intended: one argument per id.
+              run: RHINO_JAR="$RUNNER_TEMP/rhino.jar" node provider-engine/tools/live-probe.mjs $PROVIDERS
+            - name: Report providers 1-8
+              if: always()
+              run: node provider-engine/tools/live-probe-report.mjs 0 8
+            - name: Report providers 9-16
+              if: always()
+              run: node provider-engine/tools/live-probe-report.mjs 8 16
+            - name: Report providers 17-24
+              if: always()
+              run: node provider-engine/tools/live-probe-report.mjs 16 24
+            - name: Upload results
+              if: always()
+              uses: actions/upload-artifact@v6
+              with:
+                  name: live-provider-probe
+                  path: |
+                      build/provider-tests/live-probe.json
+                      build/provider-tests/live-probe.md
+                  if-no-files-found: ignore

@@ -1,0 +1,407 @@
+{
+  "date": "2026-10-26",
+  "method": "FFprobe metadata and independent FFmpeg video/audio decode at start and midpoint",
+  "physicalTV": false,
+  "sources": [
+    {
+      "provider": "citadel",
+      "index": 0,
+      "claimed": "720p | English",
+      "host": "img1.hscow.com",
+      "durationSeconds": 8884.125135,
+      "plausible": true,
+      "video": [
+        {
+          "width": 1280,
+          "height": 720,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "eng"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 154,
+          "seconds": 7.987687
+        },
+        {
+          "position": 4442.06,
+          "exit": 0,
+          "frames": 192,
+          "seconds": 7.995306
+        }
+      ],
+      "status": "passed",
+      "title": "Inception (2010)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "citadel",
+      "index": 1,
+      "claimed": "720p | English",
+      "host": "img1.hscow.com",
+      "durationSeconds": 8888.045848,
+      "plausible": true,
+      "video": [
+        {
+          "width": 1728,
+          "height": 720,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "und"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 100,
+          "seconds": 7.987687
+        },
+        {
+          "position": 4444.02,
+          "exit": 0,
+          "frames": 192,
+          "seconds": 7.985442
+        }
+      ],
+      "status": "passed",
+      "title": "Inception (2010)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "citadel",
+      "index": 2,
+      "claimed": "720p | Tamil",
+      "host": "img1.hscow.com",
+      "durationSeconds": 8888.036464,
+      "plausible": true,
+      "video": [
+        {
+          "width": 1280,
+          "height": 536,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "und"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 115,
+          "seconds": 7.978667
+        },
+        {
+          "position": 4444.02,
+          "exit": 0,
+          "frames": 132,
+          "seconds": 7.992438
+        }
+      ],
+      "status": "passed",
+      "title": "Inception (2010)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "citadel",
+      "index": 3,
+      "claimed": "480p | English",
+      "host": "img1.hscow.com",
+      "durationSeconds": 8884.12541,
+      "plausible": true,
+      "video": [
+        {
+          "width": 852,
+          "height": 480,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "eng"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 157,
+          "seconds": 7.987687
+        },
+        {
+          "position": 4442.06,
+          "exit": 0,
+          "frames": 192,
+          "seconds": 7.99517
+        }
+      ],
+      "status": "passed",
+      "title": "Inception (2010)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "citadel",
+      "index": 4,
+      "claimed": "480p | English",
+      "host": "img1.hscow.com",
+      "durationSeconds": 8888.045835,
+      "plausible": true,
+      "video": [
+        {
+          "width": 1152,
+          "height": 480,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "und"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 103,
+          "seconds": 7.987664
+        },
+        {
+          "position": 4444.02,
+          "exit": 0,
+          "frames": 192,
+          "seconds": 7.98542
+        }
+      ],
+      "status": "passed",
+      "title": "Inception (2010)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "citadel",
+      "index": 5,
+      "claimed": "480p | Tamil",
+      "host": "img1.hscow.com",
+      "durationSeconds": 8887.962393,
+      "plausible": true,
+      "video": [
+        {
+          "width": 1146,
+          "height": 480,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "und"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 107,
+          "seconds": 7.987664
+        },
+        {
+          "position": 4443.98,
+          "exit": 0,
+          "frames": 192,
+          "seconds": 7.980703
+        }
+      ],
+      "status": "passed",
+      "title": "Inception (2010)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "citadel",
+      "index": 0,
+      "claimed": "720p | Hindi",
+      "host": "img1.hscow.com",
+      "durationSeconds": 3486.52478,
+      "plausible": true,
+      "video": [
+        {
+          "width": 1280,
+          "height": 720,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "hin"
+        },
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "eng"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 138,
+          "seconds": 7.987664
+        },
+        {
+          "position": 1743.26,
+          "exit": 0,
+          "frames": 161,
+          "seconds": 7.986599
+        }
+      ],
+      "status": "passed",
+      "title": "Breaking Bad S01E01 (2008)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "citadel",
+      "index": 1,
+      "claimed": "480p | Hindi",
+      "host": "img1.hscow.com",
+      "durationSeconds": 3486.524782,
+      "plausible": true,
+      "video": [
+        {
+          "width": 852,
+          "height": 480,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "hin"
+        },
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": "eng"
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 138,
+          "seconds": 7.987664
+        },
+        {
+          "position": 1743.26,
+          "exit": 0,
+          "frames": 161,
+          "seconds": 7.986599
+        }
+      ],
+      "status": "passed",
+      "title": "Breaking Bad S01E01 (2008)",
+      "sampleSeconds": 8
+    },
+    {
+      "provider": "primevids",
+      "index": 0,
+      "claimed": "dcloud",
+      "host": "cdn2.fastcloud.live",
+      "durationSeconds": 8887.941976,
+      "plausible": true,
+      "video": [
+        {
+          "width": 1920,
+          "height": 800,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": null
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 478,
+          "seconds": 29.988292
+        },
+        {
+          "position": 4443.97,
+          "exit": 0,
+          "frames": 720,
+          "seconds": 29.988292
+        }
+      ],
+      "status": "passed",
+      "title": "Inception (2010)",
+      "sampleSeconds": 30
+    },
+    {
+      "provider": "primevids",
+      "index": 1,
+      "claimed": "dcloud",
+      "host": "cdn2.fastcloud.live",
+      "durationSeconds": 3479.819999,
+      "plausible": true,
+      "video": [
+        {
+          "width": 854,
+          "height": 480,
+          "codec": "h264"
+        }
+      ],
+      "audio": [
+        {
+          "codec": "aac",
+          "channels": 2,
+          "language": null
+        }
+      ],
+      "samples": [
+        {
+          "position": 0,
+          "exit": 0,
+          "frames": 692,
+          "seconds": 29.994667
+        },
+        {
+          "position": 1739.91,
+          "exit": 0,
+          "frames": 720,
+          "seconds": 29.988667
+        }
+      ],
+      "status": "passed",
+      "title": "Breaking Bad S01E01 (2008)",
+      "sampleSeconds": 30
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+name: Verify copied MovieHub project
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'moviehub/**'
+      - '.github/workflows/verify-moviehub-copy.yml'
+  pull_request:
+    paths:
+      - 'moviehub/**'
+      - '.github/workflows/verify-moviehub-copy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: moviehub
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install offline test dependencies
+        run: python -m pip install requests==2.32.5 six==1.17.0
+      - name: Run existing Java core checks
+        run: bash android-tv-launcher/tests/run-core-tests.sh
+      - name: Run existing Python provider fixture tests
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          PYTHONPATH: android-tv-launcher/app/src/main/python
+        run: python -B -m unittest discover -s android-tv-launcher/tests -p 'test_*.py'
+      - name: Run existing provider-engine tests
+        run: node --test provider-engine/tests/*.test.mjs
